@@ -8,82 +8,91 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Play Store Theme Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 215 16% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 16% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 16% 20%;
 
-    --primary: 217 83% 53%;
+    /* Primary: #2563EB */
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
+    /* Secondary: #64748B */
     --secondary: 215 20% 65%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
+    /* Accent: #10B981 */
     --accent: 160 84% 39%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 83% 53%;
+    --border: 215 20% 90%;
+    --input: 215 20% 90%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
+    --radius-xl: 1rem;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 217 83% 53%;
+    --sidebar-foreground: 215 16% 20%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217 83% 53%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 215 16% 20%;
+    --sidebar-border: 215 20% 90%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Mode: Surface #0B1220, Text #E6EAF2 */
+    --background: 215 40% 7%;
+    --foreground: 215 25% 92%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 215 35% 10%;
+    --card-foreground: 215 25% 92%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 215 35% 10%;
+    --popover-foreground: 215 25% 92%;
 
-    --primary: 217 83% 63%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Keep brand blue in dark mode */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 215 20% 55%;
+    --secondary-foreground: 215 25% 92%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 215 30% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 160 84% 49%;
-    --accent-foreground: 210 40% 98%;
+    /* Keep brand green in dark mode */
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 215 25% 92%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 217 83% 63%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 217 83% 63%;
+    --border: 215 30% 18%;
+    --input: 215 30% 18%;
+    --ring: 217 91% 60%;
+    
+    --sidebar-background: 215 35% 10%;
+    --sidebar-foreground: 215 25% 92%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217 83% 63%;
+    --sidebar-accent: 215 30% 15%;
+    --sidebar-accent-foreground: 215 25% 92%;
+    --sidebar-border: 215 30% 18%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -93,6 +102,48 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 16px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium;
+  }
+
+  h1 {
+    @apply text-[32px] leading-tight;
+  }
+
+  h2 {
+    @apply text-[24px] leading-snug;
+  }
+
+  h3 {
+    @apply text-[20px] leading-snug;
+  }
+}
+
+@layer utilities {
+  /* Safe area insets for Android */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Card styling utilities */
+  .card-shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .card-shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Hover/tap scale effect */
+  .hover-scale {
+    @apply transition-transform duration-200 active:scale-95 hover:scale-[1.02];
   }
 }

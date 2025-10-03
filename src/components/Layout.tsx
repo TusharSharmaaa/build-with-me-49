@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { AppShell } from "./AppShell";
 import { BottomNav } from "./BottomNav";
 
 interface LayoutProps {
@@ -7,11 +8,11 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen pb-16">
-      <main className="container mx-auto px-4 py-6 max-w-screen-xl">
+    <AppShell>
+      <div className="container mx-auto px-4 py-3 max-w-screen-xl space-y-3">
         {children}
-      </main>
+      </div>
       <BottomNav />
-    </div>
+    </AppShell>
   );
 }

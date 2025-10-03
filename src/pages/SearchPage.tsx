@@ -6,14 +6,36 @@ import { ToolCard } from "@/components/ToolCard";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search } from "lucide-react";
+import { BannerAd } from "@/components/ads/BannerAd";
+import { RewardedAd } from "@/components/ads/RewardedAd";
+import { useAdFrequency } from "@/hooks/useAdFrequency";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const { toast } = useToast();
+  
+  // Track search frequency for rewarded ad
+  const {
+    shouldShow: shouldShowRewardedAd,
+    viewCount: searchCount,
+    incrementView: incrementSearch,
+    resetAd: resetRewardedAd
+  } = useAdFrequency({
+    key: "search",
+    maxViews: 10,
+    resetInterval: 3600000 // 1 hour
+  });
+
+  const [showBonusTools, setShowBonusTools] = useState(false);
 
   const { data: tools, isLoading } = useQuery({
     queryKey: ["search-tools", searchQuery],
     queryFn: async () => {
       if (!searchQuery) return [];
+      
+      incrementSearch(); // Track search for rewarded ad
       
       const { data, error } = await supabase
         .from("ai_tools")
@@ -26,6 +48,14 @@ export default function SearchPage() {
     },
     enabled: searchQuery.length > 2,
   });
+
+  const handleRewardEarned = () => {
+    setShowBonusTools(true);
+    toast({
+      title: "Bonus tools unlocked!",
+      description: "You can now see premium tools in your search results.",
+    });
+  };
 
   return (
     <Layout>
@@ -49,20 +79,44 @@ export default function SearchPage() {
           />
         </div>
 
+        {searchCount >= 8 && !showBonusTools && (
+          <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+            <CardContent className="py-6 text-center space-y-3">
+              <p className="font-semibold">🎁 Unlock Bonus Premium Tools!</p>
+              <p className="text-sm text-muted-foreground">
+                Watch a short video to unlock premium tools in your results
+              </p>
+              <Button onClick={() => resetRewardedAd()}>
+                Unlock Now
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {searchQuery.length > 2 && (
           <>
             {isLoading ? (
               <p className="text-center text-muted-foreground">Searching...</p>
             ) : tools && tools.length > 0 ? (
               <>
-                <p className="text-sm text-muted-foreground">
-                  Found {tools.length} tool{tools.length !== 1 ? "s" : ""}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    Found {tools.length} tool{tools.length !== 1 ? "s" : ""}
+                  </p>
+                  {showBonusTools && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                      Premium tools unlocked ✨
+                    </span>
+                  )}
+                </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {tools.map((tool) => (
                     <ToolCard key={tool.id} {...tool} />
                   ))}
                 </div>
+                
+                {/* Banner Ad at bottom of search results */}
+                <BannerAd position="bottom" className="mt-4" />
               </>
             ) : (
               <Card>
@@ -82,6 +136,14 @@ export default function SearchPage() {
           </Card>
         )}
       </div>
+
+      {/* Rewarded Ad Modal */}
+      <RewardedAd
+        isOpen={shouldShowRewardedAd}
+        onClose={resetRewardedAd}
+        onRewardEarned={handleRewardEarned}
+        rewardDescription="premium tools"
+      />
     </Layout>
   );
 }

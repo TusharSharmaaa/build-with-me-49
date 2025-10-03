@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
+import { BannerAd } from "@/components/ads/BannerAd";
 
 export default function CategoryTools() {
   const { fieldId } = useParams();
@@ -70,11 +71,16 @@ export default function CategoryTools() {
             ))}
           </div>
         ) : tools && tools.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {tools.map((tool) => (
-              <ToolCard key={tool.id} {...tool} />
-            ))}
-          </div>
+          <>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {tools.map((tool) => (
+                <ToolCard key={tool.id} {...tool} />
+              ))}
+            </div>
+            
+            {/* Banner Ad at bottom of category page */}
+            <BannerAd position="bottom" className="mt-8" />
+          </>
         ) : (
           <Card>
             <CardContent className="py-12 text-center">

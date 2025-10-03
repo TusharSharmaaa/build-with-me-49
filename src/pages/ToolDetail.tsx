@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { StarRating } from "@/components/StarRating";
 import { ReviewSection } from "@/components/ReviewSection";
+import { InterstitialAd } from "@/components/ads/InterstitialAd";
+import { useAdFrequency } from "@/hooks/useAdFrequency";
 
 export default function ToolDetail() {
   const { toolId } = useParams();
@@ -18,9 +20,23 @@ export default function ToolDetail() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState<any>(null);
 
+  // Track tool detail views for interstitial ad
+  const {
+    shouldShow: shouldShowInterstitial,
+    incrementView,
+    resetAd
+  } = useAdFrequency({
+    key: "tool_detail",
+    maxViews: 2,
+    resetInterval: 1800000 // 30 minutes
+  });
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
-  }, []);
+    
+    // Increment view count for interstitial ad
+    incrementView();
+  }, [incrementView]);
 
   const { data: tool, isLoading } = useQuery({
     queryKey: ["tool", toolId],
@@ -213,6 +229,13 @@ export default function ToolDetail() {
 
         <ReviewSection toolId={toolId!} />
       </div>
+
+      {/* Interstitial Ad Modal */}
+      <InterstitialAd
+        isOpen={shouldShowInterstitial}
+        onClose={resetAd}
+        autoCloseDelay={5000}
+      />
     </Layout>
   );
 }

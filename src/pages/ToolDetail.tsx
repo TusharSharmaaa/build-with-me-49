@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ExternalLink, Heart, Star } from "lucide-react";
+import { ArrowLeft, ExternalLink, Heart, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
+import { StarRating } from "@/components/StarRating";
+import { ReviewSection } from "@/components/ReviewSection";
 
 export default function ToolDetail() {
   const { toolId } = useParams();
@@ -82,6 +84,24 @@ export default function ToolDetail() {
     },
   });
 
+  const handleShare = async () => {
+    if (navigator.share && tool) {
+      try {
+        await navigator.share({
+          title: tool.name,
+          text: tool.description || `Check out ${tool.name}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        // User cancelled or error occurred
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      toast({ title: "Link copied to clipboard!" });
+    }
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -130,10 +150,7 @@ export default function ToolDetail() {
                 <div>
                   <CardTitle className="text-2xl">{tool.name}</CardTitle>
                   <div className="flex items-center gap-2 mt-2">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{tool.rating.toFixed(1)}</span>
-                    </div>
+                    <StarRating rating={tool.rating} size={20} />
                     <span className="text-sm text-muted-foreground">
                       ({tool.reviews_count} reviews)
                     </span>
@@ -141,6 +158,13 @@ export default function ToolDetail() {
                 </div>
               </div>
               <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleShare}
+                >
+                  <Share2 className="h-4 w-4" />
+                </Button>
                 <Button
                   variant={isFavorited ? "default" : "outline"}
                   size="icon"
@@ -186,6 +210,8 @@ export default function ToolDetail() {
             )}
           </CardContent>
         </Card>
+
+        <ReviewSection toolId={toolId!} />
       </div>
     </Layout>
   );

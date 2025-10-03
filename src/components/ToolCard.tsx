@@ -1,8 +1,9 @@
-import { Star, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { StarRating } from "./StarRating";
 
 interface ToolCardProps {
   id: string;
@@ -42,8 +43,7 @@ export function ToolCard({
             <div className="flex-1 min-w-0">
               <CardTitle className="text-lg truncate">{name}</CardTitle>
               <div className="flex items-center gap-1 mt-1">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+                <StarRating rating={rating} size={16} />
                 <span className="text-xs text-muted-foreground">
                   ({reviews_count})
                 </span>

@@ -12,6 +12,15 @@ import { useNavigate, Link } from "react-router-dom";
 export default function SubmitTool() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    tool_name: "",
+    description: "",
+    category: "",
+    website_url: "",
+    free_tier: false,
+    free_limit: "",
+  });
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -19,18 +28,34 @@ export default function SubmitTool() {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (step === 1 && !formData.tool_name) {
+      toast({
+        title: "Required",
+        description: "Tool name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+    setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
     setLoading(true);
-    const formData = new FormData(e.currentTarget);
     
     const { error } = await supabase.from("submissions").insert({
       user_id: user.id,
-      tool_name: formData.get("tool_name") as string,
-      description: formData.get("description") as string,
-      category: formData.get("category") as string,
+      tool_name: formData.tool_name,
+      description: formData.description || null,
+      category: formData.category || null,
     });
 
     setLoading(false);
@@ -42,7 +67,10 @@ export default function SubmitTool() {
         variant: "destructive",
       });
     } else {
-      toast({ title: "Tool submitted successfully!" });
+      toast({ 
+        title: "Tool submitted successfully!",
+        description: "We'll review your submission and add it soon."
+      });
       navigate("/profile");
     }
   };
@@ -77,42 +105,89 @@ export default function SubmitTool() {
         <Card>
           <CardHeader>
             <CardTitle>Tool Information</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Step {step} of 2
+            </p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="tool_name">Tool Name *</Label>
-                <Input
-                  id="tool_name"
-                  name="tool_name"
-                  required
-                  placeholder="e.g., ChatGPT"
-                />
-              </div>
+            {step === 1 ? (
+              <form onSubmit={handleNext} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tool_name">Tool Name *</Label>
+                  <Input
+                    id="tool_name"
+                    value={formData.tool_name}
+                    onChange={(e) => setFormData({ ...formData, tool_name: e.target.value })}
+                    required
+                    placeholder="e.g., ChatGPT"
+                    maxLength={100}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  placeholder="Brief description of what the tool does..."
-                  rows={4}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="website_url">Website URL</Label>
+                  <Input
+                    id="website_url"
+                    type="url"
+                    value={formData.website_url}
+                    onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+                    placeholder="https://example.com"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Input
-                  id="category"
-                  name="category"
-                  placeholder="e.g., Writing, Design, Development"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Input
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    placeholder="e.g., Writing, Design, Development"
+                    maxLength={50}
+                  />
+                </div>
 
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? "Submitting..." : "Submit Tool"}
-              </Button>
-            </form>
+                <Button type="submit" className="w-full">
+                  Next
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Brief description of what the tool does..."
+                    rows={4}
+                    maxLength={500}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {formData.description.length}/500 characters
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="free_limit">Free Usage Limit (if any)</Label>
+                  <Input
+                    id="free_limit"
+                    value={formData.free_limit}
+                    onChange={(e) => setFormData({ ...formData, free_limit: e.target.value })}
+                    placeholder="e.g., 20 messages per day"
+                    maxLength={100}
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" onClick={handleBack} className="flex-1">
+                    Back
+                  </Button>
+                  <Button type="submit" disabled={loading} className="flex-1">
+                    {loading ? "Submitting..." : "Submit Tool"}
+                  </Button>
+                </div>
+              </form>
+            )}
           </CardContent>
         </Card>
       </div>

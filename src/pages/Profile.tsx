@@ -4,11 +4,13 @@ import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminRole } from "@/hooks/useAdminRole";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
+  const { isAdmin } = useAdminRole();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -61,6 +63,15 @@ export default function Profile() {
         </Card>
 
         <div className="space-y-2">
+          {isAdmin && (
+            <Button asChild variant="outline" className="w-full justify-start border-primary/20">
+              <Link to="/admin">
+                <Shield className="mr-2 h-4 w-4" />
+                Admin Dashboard
+              </Link>
+            </Button>
+          )}
+          
           <Button asChild variant="outline" className="w-full justify-start">
             <Link to="/settings">
               <Settings className="mr-2 h-4 w-4" />

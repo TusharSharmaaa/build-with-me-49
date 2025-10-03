@@ -48,9 +48,17 @@ export default function Home() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover free AI tools tailored to your profession. Find the perfect tools with transparent pricing and usage limits.
           </p>
-          <Button asChild size="lg">
-            <Link to="/categories">Browse Categories</Link>
-          </Button>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Button asChild size="lg">
+              <Link to="/categories">Browse Categories</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link to="/premium">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Premium Tools
+              </Link>
+            </Button>
+          </div>
         </section>
 
         {/* Quick Categories */}

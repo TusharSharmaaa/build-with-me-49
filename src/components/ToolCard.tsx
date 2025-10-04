@@ -1,7 +1,7 @@
 import { ExternalLink, Eye, Sparkles, Zap, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { Card, CardContent, CardFooter } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { StarRating } from "./StarRating";
 

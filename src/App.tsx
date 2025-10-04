@@ -24,7 +24,6 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Toaster />
       <Sonner />
@@ -49,7 +48,6 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-    
   </QueryClientProvider>
 );
 

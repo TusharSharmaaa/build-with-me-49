@@ -1,43 +1,26 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
-import { trackEvent } from "@/lib/analytics";
-import { initAds } from "@/lib/ads";
-import { ConsentModal } from "@/components/ConsentModal";
-import { ErrorBoundary } from "@/components/system/ErrorBoundary";
-import { useRemoteConfig } from "@/hooks/useRemoteConfig";
 
-// Eager load critical routes
-import Home from "./pages/Home";
-import Auth from "./pages/Auth";
+// Eager load critical pages
+import { HomePage } from "./pages/simple/HomePage";
 
-// Lazy load secondary routes for code splitting
-const Categories = lazy(() => import("./pages/Categories"));
-const CategoryTools = lazy(() => import("./pages/CategoryTools"));
-const ToolDetail = lazy(() => import("./pages/ToolDetail"));
-const SearchPage = lazy(() => import("./pages/SearchPage"));
-const Favorites = lazy(() => import("./pages/Favorites"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Settings = lazy(() => import("./pages/Settings"));
-const SubmitTool = lazy(() => import("./pages/SubmitTool"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const Admin = lazy(() => import("./pages/Admin"));
-const PremiumTools = lazy(() => import("./pages/PremiumTools"));
-const Compare = lazy(() => import("./pages/Compare"));
-const Collections = lazy(() => import("./pages/Collections"));
-const CollectionDetail = lazy(() => import("./pages/CollectionDetail"));
-const Workflows = lazy(() => import("./pages/Workflows"));
-const WorkflowDetail = lazy(() => import("./pages/WorkflowDetail"));
-const About = lazy(() => import("./pages/About"));
-const Changelog = lazy(() => import("./pages/Changelog"));
+// Lazy load secondary pages
+const CategoriesPage = lazy(() => import("./pages/simple/CategoriesPage").then(m => ({ default: m.CategoriesPage })));
+const CategoryToolsPage = lazy(() => import("./pages/simple/CategoryToolsPage").then(m => ({ default: m.CategoryToolsPage })));
+const ToolDetailPage = lazy(() => import("./pages/simple/ToolDetailPage").then(m => ({ default: m.ToolDetailPage })));
+const SearchPage = lazy(() => import("./pages/simple/SearchPage").then(m => ({ default: m.SearchPage })));
+const FavoritesPage = lazy(() => import("./pages/simple/FavoritesPage").then(m => ({ default: m.FavoritesPage })));
+const ProfilePage = lazy(() => import("./pages/simple/ProfilePage").then(m => ({ default: m.ProfilePage })));
+const SubmitPage = lazy(() => import("./pages/simple/SubmitPage").then(m => ({ default: m.SubmitPage })));
+const AboutPage = lazy(() => import("./pages/simple/AboutPage").then(m => ({ default: m.AboutPage })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 2,
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
     },
   },
 });
@@ -50,82 +33,26 @@ function LoadingFallback() {
   );
 }
 
-// Route transitions wrapper
-function AnimatedRoutes({ children }: { children: React.ReactNode }) {
-  const location = useLocation();
-  
-  return (
-    <div
-      key={location.pathname}
-      className="animate-fade-in"
-    >
-      {children}
-    </div>
-  );
-}
-
-function AppContent() {
-  useRemoteConfig(); // Load remote config for ad frequencies
-  
-  useEffect(() => {
-    trackEvent("open_app");
-    initAds({ 
-      appId: import.meta.env.VITE_ADMOB_APP_ID || "",
-      testMode: true 
-    });
-    
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
-        console.warn('Service Worker registration failed:', err);
-      });
-    }
-  }, []);
-
-  return (
-    <>
-      <ConsentModal />
-      <AnimatedRoutes>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/category/:fieldId" element={<CategoryTools />} />
-            <Route path="/tool/:toolId" element={<ToolDetail />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/collections" element={<Collections />} />
-            <Route path="/collection/:slug" element={<CollectionDetail />} />
-            <Route path="/workflows" element={<Workflows />} />
-            <Route path="/workflow/:slug" element={<WorkflowDetail />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/submit" element={<SubmitTool />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/changelog" element={<Changelog />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/premium" element={<PremiumTools />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </AnimatedRoutes>
-      <Toaster />
-    </>
-  );
-}
-
 function App() {
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/category/:slug" element={<CategoryToolsPage />} />
+            <Route path="/tool/:id" element={<ToolDetailPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/submit" element={<SubmitPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </Suspense>
+        <Toaster />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

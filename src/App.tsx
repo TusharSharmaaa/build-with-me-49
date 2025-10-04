@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { trackEvent } from "@/lib/analytics";
 import { initAds } from "@/lib/ads";
 import { ConsentModal } from "@/components/ConsentModal";
+import { ErrorBoundary } from "@/components/system/ErrorBoundary";
+import { useRemoteConfig } from "@/hooks/useRemoteConfig";
 
 // Eager load critical routes
 import Home from "./pages/Home";
@@ -62,49 +64,68 @@ function AnimatedRoutes({ children }: { children: React.ReactNode }) {
   );
 }
 
-function App() {
+function AppContent() {
+  useRemoteConfig(); // Load remote config for ad frequencies
+  
   useEffect(() => {
     trackEvent("open_app");
     initAds({ 
       appId: import.meta.env.VITE_ADMOB_APP_ID || "",
       testMode: true 
     });
+    
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.warn('Service Worker registration failed:', err);
+      });
+    }
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ConsentModal />
-        <AnimatedRoutes>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/category/:fieldId" element={<CategoryTools />} />
-              <Route path="/tool/:toolId" element={<ToolDetail />} />
-              <Route path="/compare" element={<Compare />} />
-              <Route path="/collections" element={<Collections />} />
-              <Route path="/collection/:slug" element={<CollectionDetail />} />
-              <Route path="/workflows" element={<Workflows />} />
-              <Route path="/workflow/:slug" element={<WorkflowDetail />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/submit" element={<SubmitTool />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/changelog" element={<Changelog />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/premium" element={<PremiumTools />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </AnimatedRoutes>
-        <Toaster />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <>
+      <ConsentModal />
+      <AnimatedRoutes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/category/:fieldId" element={<CategoryTools />} />
+            <Route path="/tool/:toolId" element={<ToolDetail />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/collection/:slug" element={<CollectionDetail />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/workflow/:slug" element={<WorkflowDetail />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/submit" element={<SubmitTool />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/changelog" element={<Changelog />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/premium" element={<PremiumTools />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </AnimatedRoutes>
+      <Toaster />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

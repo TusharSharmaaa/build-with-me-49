@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ai-tools-list-v1';
-const OFFLINE_CACHE = 'ai-tools-offline-v1';
+const CACHE_NAME = 'ai-tools-list-v3';
+const OFFLINE_CACHE = 'ai-tools-offline-v3';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -89,15 +89,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For static assets - cache first, then network
+  // For static assets - bypass caching for Vite dev bundles and JS chunks
+  if (url.pathname.includes('/node_modules/.vite') || url.pathname.includes('/@react-refresh') || url.pathname.endsWith('.js')) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // For other static assets - cache first, then network
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) {
         return cached;
       }
-      
       return fetch(request).then((response) => {
-        // Cache successful responses
         if (response.status === 200) {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {

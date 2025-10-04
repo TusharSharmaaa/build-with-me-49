@@ -1,28 +1,32 @@
 import * as React from "react";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
-import { cn } from "@/lib/utils";
+// Safe no-op tooltip shims to avoid Radix dependency and hook/runtime issues
+// Exports keep the same names used across the app so no other code needs changes
 
-const TooltipProvider = TooltipPrimitive.Provider;
+const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
 
-const Tooltip = TooltipPrimitive.Root;
+const Tooltip: React.FC<{ children: React.ReactNode } & Record<string, any>> = ({ children }) => <>{children}</>;
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+type TriggerProps = React.ComponentPropsWithoutRef<"button"> & { asChild?: boolean } & Record<string, any>;
+const TooltipTrigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ asChild, children, ...props }, ref) => {
+  if (asChild && React.isValidElement(children)) {
+    // just pass props to child without wrapping
+    return React.cloneElement(children as React.ReactElement, { ...props, ref } as any);
+  }
+  return (
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  );
+});
+TooltipTrigger.displayName = "TooltipTrigger";
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      className,
-    )}
-    {...props}
-  />
+type ContentProps = React.ComponentPropsWithoutRef<"div"> & { side?: any; sideOffset?: any } & Record<string, any>;
+const TooltipContent = React.forwardRef<HTMLDivElement, ContentProps>(({ className, children, ...props }, ref) => (
+  <div ref={ref} role="tooltip" className={className} {...props}>
+    {children}
+  </div>
 ));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+TooltipContent.displayName = "TooltipContent";
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };

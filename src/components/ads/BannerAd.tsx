@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { getAdUnitIds } from "@/lib/ads";
 
 interface BannerAdProps {
   placement: "listing" | "search";
@@ -14,8 +15,9 @@ export function BannerAd({ placement, className = "" }: BannerAdProps) {
     
     // In native app with Capacitor, this would initialize AdMob banner
     if (typeof window !== 'undefined' && (window as any).admob) {
+      const adUnits = getAdUnitIds();
       (window as any).admob.createBanner({
-        adId: 'ca-app-pub-3940256099942544/6300978111', // Test ID
+        adId: adUnits.banner,
         position: 'BOTTOM_CENTER',
         autoShow: true,
       });

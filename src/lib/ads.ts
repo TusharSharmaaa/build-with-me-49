@@ -13,13 +13,17 @@ interface RewardedOptions {
   onReward: () => void;
 }
 
-// Test ad unit IDs from Google AdMob
-const TEST_AD_UNITS = {
-  appId: 'ca-app-pub-3940256099942544~3347511713',
-  banner: 'ca-app-pub-3940256099942544/6300978111',
-  interstitial: 'ca-app-pub-3940256099942544/1033173712',
-  rewarded: 'ca-app-pub-3940256099942544/5224354917',
+// AdMob ad unit IDs from environment (falls back to test IDs in dev)
+const AD_UNITS = {
+  appId: import.meta.env.VITE_ADMOB_APP_ID || 'ca-app-pub-3940256099942544~3347511713',
+  banner: import.meta.env.VITE_ADMOB_BANNER_ID || 'ca-app-pub-3940256099942544/6300978111',
+  interstitial: import.meta.env.VITE_ADMOB_INTERSTITIAL_ID || 'ca-app-pub-3940256099942544/1033173712',
+  rewarded: import.meta.env.VITE_ADMOB_REWARDED_ID || 'ca-app-pub-3940256099942544/5224354917',
 };
+
+export function getAdUnitIds() {
+  return AD_UNITS;
+}
 
 // Counter keys for localStorage
 const STORAGE_KEYS = {

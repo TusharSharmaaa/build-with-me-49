@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function SubmitTool() {
@@ -21,7 +21,6 @@ export default function SubmitTool() {
     free_tier: false,
     free_limit: "",
   });
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,11 +30,7 @@ export default function SubmitTool() {
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (step === 1 && !formData.tool_name) {
-      toast({
-        title: "Required",
-        description: "Tool name is required",
-        variant: "destructive",
-      });
+      toast.error("Tool name is required");
       return;
     }
     setStep(step + 1);
@@ -61,14 +56,9 @@ export default function SubmitTool() {
     setLoading(false);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message);
     } else {
-      toast({ 
-        title: "Tool submitted successfully!",
+      toast.success("Tool submitted successfully!", {
         description: "We'll review your submission and add it soon."
       });
       navigate("/profile");

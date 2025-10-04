@@ -5,14 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Settings, LogOut, Shield } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useAdminRole } from "@/hooks/useAdminRole";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
   const { isAdmin } = useAdminRole();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
@@ -20,7 +19,7 @@ export default function Profile() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    toast({ title: "Logged out successfully" });
+    toast.success("Logged out successfully");
     navigate("/auth");
   };
 

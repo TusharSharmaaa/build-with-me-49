@@ -79,7 +79,7 @@ export default function CategoryTools() {
             </div>
             
             {/* Banner Ad at bottom of category page */}
-            <BannerAd position="bottom" className="mt-8" />
+            <BannerAd placement="listing" className="mt-8" />
           </>
         ) : (
           <Card>

@@ -116,7 +116,7 @@ export default function SearchPage() {
                 </div>
                 
                 {/* Banner Ad at bottom of search results */}
-                <BannerAd placement="search" className="mt-4" />
+                <BannerAd position="bottom" className="mt-4" />
               </>
             ) : (
               <Card>

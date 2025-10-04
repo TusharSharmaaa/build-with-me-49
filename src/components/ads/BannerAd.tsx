@@ -1,39 +1,30 @@
 import { useEffect, useRef } from "react";
-import { trackEvent } from "@/lib/analytics";
 
 interface BannerAdProps {
-  placement: "listing" | "search";
+  position?: "top" | "bottom";
   className?: string;
 }
 
-export function BannerAd({ placement, className = "" }: BannerAdProps) {
+export function BannerAd({ position = "bottom", className = "" }: BannerAdProps) {
   const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    trackEvent('ad_banner_impression', { placement });
-    
-    // In native app with Capacitor, this would initialize AdMob banner
-    if (typeof window !== 'undefined' && (window as any).admob) {
-      (window as any).admob.createBanner({
-        adId: 'ca-app-pub-3940256099942544/6300978111', // Test ID
-        position: 'BOTTOM_CENTER',
-        autoShow: true,
-      });
-    }
-  }, [placement]);
+    // TODO: Initialize AdSense/AdMob banner ad
+    // For now, showing placeholder
+    console.log("Banner ad initialized at position:", position);
+  }, [position]);
 
-  // Web fallback: show placeholder
-  const isTestMode = localStorage.getItem('ad_test_mode') === 'true';
-  
+  // In production, replace this with actual ad integration
   return (
     <div 
       ref={adRef}
-      className={`w-full bg-muted/30 border border-border/50 rounded-lg flex items-center justify-center ${className}`}
-      style={{ minHeight: "60px" }}
+      className={`w-full bg-muted/50 border border-border rounded-lg flex items-center justify-center ${className}`}
+      style={{ minHeight: "90px" }}
     >
-      <div className="text-center p-3">
-        <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">
-          Advertisement {isTestMode && '(Test)'}
+      <div className="text-center p-4">
+        <p className="text-xs text-muted-foreground">Advertisement</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Banner Ad Placeholder
         </p>
       </div>
     </div>

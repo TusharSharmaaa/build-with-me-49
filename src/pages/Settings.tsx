@@ -2,23 +2,15 @@ import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Bell, Shield, Info, FileText, Smartphone } from "lucide-react";
+import { ArrowLeft, Bell, Shield, Info, FileText } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
 
 export default function Settings() {
   const { permission, isSupported, requestPermission } = usePushNotifications();
-  const [testAds, setTestAds] = useState(false);
-  const [personalizedAds, setPersonalizedAds] = useState(true);
-
-  useEffect(() => {
-    setTestAds(localStorage.getItem('ad_test_mode') === 'true');
-    setPersonalizedAds(localStorage.getItem('ad_personalization_consent') === 'yes');
-  }, []);
 
   const handleNotificationToggle = async (enabled: boolean) => {
     if (enabled) {
@@ -72,50 +64,6 @@ export default function Settings() {
                 Push notifications are not supported in your browser
               </p>
             )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5" />
-              Ad Preferences
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Personalized Ads</Label>
-                <p className="text-sm text-muted-foreground">
-                  Show ads based on your interests
-                </p>
-              </div>
-              <Switch
-                checked={personalizedAds}
-                onCheckedChange={(checked) => {
-                  setPersonalizedAds(checked);
-                  localStorage.setItem('ad_personalization_consent', checked ? 'yes' : 'no');
-                  toast.success(checked ? 'Personalized ads enabled' : 'Personalized ads disabled');
-                }}
-              />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Use Test Ads</Label>
-                <p className="text-sm text-muted-foreground">
-                  Show test ads instead of real ones
-                </p>
-              </div>
-              <Switch
-                checked={testAds}
-                onCheckedChange={(checked) => {
-                  setTestAds(checked);
-                  localStorage.setItem('ad_test_mode', String(checked));
-                  toast.success(checked ? 'Test ads enabled' : 'Test ads disabled');
-                }}
-              />
-            </div>
           </CardContent>
         </Card>
 

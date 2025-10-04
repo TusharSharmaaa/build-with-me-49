@@ -12,7 +12,6 @@ import { Search, TrendingUp, Clock } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { initAds } from "@/lib/ads";
 import { useRemoteConfig } from "@/hooks/useRemoteConfig";
-import { ValueProposition } from "@/components/ValueProposition";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -83,21 +82,20 @@ export default function Home() {
       <div className="space-y-6 md:space-y-8 pb-6">
         {/* Mobile-Optimized Hero */}
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-primary opacity-5 rounded-2xl md:rounded-3xl blur-2xl md:blur-3xl" />
-          <div className="relative space-y-3 md:space-y-4">
+          <div className="space-y-3 md:space-y-4">
             <div className="space-y-1 md:space-y-2">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent leading-tight">
                 Discover Free AI Tools
               </h1>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                Comprehensive directory with usage limits, tutorials, and expert insights
+                Comprehensive directory with usage limits and expert insights
               </p>
             </div>
             <div className="relative">
               <Search className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 h-5 md:h-6 w-5 md:w-6 text-primary" />
               <Input
-                placeholder="Search AI tools, guides, tutorials..."
-                className="pl-12 md:pl-14 h-12 md:h-14 text-sm md:text-base rounded-xl md:rounded-2xl shadow-premium-lg border-2 hover:border-primary transition-smooth"
+                placeholder="Search AI tools..."
+                className="pl-12 md:pl-14 h-12 md:h-14 text-sm md:text-base rounded-xl md:rounded-2xl border-2 hover:border-primary transition-colors"
                 onFocus={handleSearchFocus}
                 readOnly
               />
@@ -111,7 +109,8 @@ export default function Home() {
             {categories.map((category) => (
               <Badge
                 key={category.id}
-                className="cursor-pointer whitespace-nowrap px-4 md:px-5 py-2 md:py-3 text-xs md:text-sm font-medium bg-gradient-card hover:bg-gradient-primary hover:text-primary-foreground transition-smooth shadow-premium hover:shadow-primary active:scale-95 border-2 flex-shrink-0"
+                className="cursor-pointer whitespace-nowrap px-4 md:px-5 py-2 md:py-2.5 text-xs md:text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-colors active:scale-95 border flex-shrink-0"
+                variant="outline"
                 onClick={() => handleCategoryClick(category.slug)}
               >
                 {category.name}
@@ -124,7 +123,7 @@ export default function Home() {
         {showTrending && (
           <section className="space-y-3 md:space-y-4">
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-primary flex items-center justify-center shadow-primary flex-shrink-0">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-primary flex items-center justify-center flex-shrink-0">
                 <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
               </div>
               <div className="min-w-0 flex-1">
@@ -155,12 +154,12 @@ export default function Home() {
         {/* Mobile-Optimized Recent Updates */}
         <section className="space-y-3 md:space-y-4">
           <div className="flex items-center gap-2 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-accent flex items-center justify-center shadow-accent flex-shrink-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-accent flex items-center justify-center flex-shrink-0">
               <Clock className="h-4 w-4 md:h-5 md:w-5 text-accent-foreground" />
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="text-lg md:text-2xl font-bold leading-tight">Recently Updated</h2>
-              <p className="text-xs md:text-sm text-muted-foreground truncate">Fresh free tier updates</p>
+              <p className="text-xs md:text-sm text-muted-foreground truncate">Fresh updates</p>
             </div>
           </div>
           {recentLoading ? (
@@ -185,21 +184,18 @@ export default function Home() {
         </section>
 
         {/* Mobile-Optimized Quick Actions */}
-        <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2 pt-4">
-          <Button asChild size="lg" className="h-14 md:h-16 text-base md:text-lg bg-gradient-primary hover:shadow-primary transition-smooth">
+        <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2 pt-2">
+          <Button asChild size="lg" className="h-12 md:h-14 text-sm md:text-base bg-gradient-primary transition-colors">
             <Link to="/categories">
               Browse All Categories
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="h-14 md:h-16 text-base md:text-lg hover-lift">
+          <Button asChild size="lg" variant="outline" className="h-12 md:h-14 text-sm md:text-base">
             <Link to="/submit">
               Submit a Tool
             </Link>
           </Button>
         </div>
-
-        {/* Value Proposition Section */}
-        <ValueProposition />
       </div>
     </Layout>
   );

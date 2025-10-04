@@ -73,16 +73,16 @@ export function ToolCard(props: ToolCardProps) {
                 <img
                   src={logo_url}
                   alt={`${name} logo`}
-                  className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover border-2 border-border shadow-premium transition-smooth group-hover:scale-110 group-hover:shadow-premium-lg"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover border-2 border-border transition-transform group-hover:scale-105"
                 />
                 {free_tier && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-gradient-accent rounded-full flex items-center justify-center shadow-accent">
+                  <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-gradient-accent rounded-full flex items-center justify-center">
                     <Gift className="h-2.5 w-2.5 md:h-3 md:w-3 text-white" />
                   </div>
                 )}
               </div>
             ) : (
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-primary flex items-center justify-center border-2 border-border shadow-primary transition-smooth group-hover:scale-110">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-primary flex items-center justify-center border-2 border-border transition-transform group-hover:scale-105">
                 <span className="text-base md:text-lg font-bold text-primary-foreground">
                   {name.charAt(0)}
                 </span>
@@ -93,7 +93,7 @@ export function ToolCard(props: ToolCardProps) {
           {/* Mobile-Optimized Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1.5 md:mb-2">
-              <h3 className="font-bold text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary transition-smooth">
+              <h3 className="font-bold text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary transition-colors">
                 {name}
               </h3>
               {getPricingBadge()}
@@ -151,7 +151,7 @@ export function ToolCard(props: ToolCardProps) {
         <Button
           asChild
           size="sm"
-          className="flex-1 h-9 md:h-10 text-xs md:text-sm bg-gradient-primary hover:shadow-primary transition-smooth"
+          className="flex-1 h-9 md:h-10 text-xs md:text-sm bg-gradient-primary transition-colors"
         >
           <Link to={`/tool/${id}`}>
             <Eye className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
@@ -163,7 +163,7 @@ export function ToolCard(props: ToolCardProps) {
             asChild
             variant="outline"
             size="sm"
-            className="h-9 md:h-10 w-9 md:w-10 p-0 hover-lift flex-shrink-0"
+            className="h-9 md:h-10 w-9 md:w-10 p-0 flex-shrink-0 transition-colors hover:bg-primary hover:text-primary-foreground"
           >
             <a href={website_url} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />

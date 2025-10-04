@@ -13,6 +13,7 @@ import { StarRating } from "@/components/StarRating";
 import { ReviewSection } from "@/components/ReviewSection";
 import { InterstitialAd } from "@/components/ads/InterstitialAd";
 import { useAdFrequency } from "@/hooks/useAdFrequency";
+import { ToolDetailedInfo } from "@/components/ToolDetailedInfo";
 
 export default function ToolDetail() {
   const { toolId } = useParams();
@@ -237,6 +238,9 @@ export default function ToolDetail() {
             )}
           </CardContent>
         </Card>
+
+        {/* Rich Knowledge Content */}
+        <ToolDetailedInfo toolName={tool.name} category={tool.category} />
 
         <ReviewSection toolId={toolId!} />
       </div>

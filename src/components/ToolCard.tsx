@@ -64,67 +64,67 @@ export function ToolCard(props: ToolCardProps) {
 
   return (
     <Card className="card-premium group overflow-hidden">
-      <CardContent className="p-5">
-        <div className="flex gap-4">
-          {/* Enhanced Logo */}
+      <CardContent className="p-4 md:p-5">
+        <div className="flex gap-3 md:gap-4">
+          {/* Mobile-Optimized Logo */}
           <div className="flex-shrink-0">
             {logo_url ? (
               <div className="relative">
                 <img
                   src={logo_url}
                   alt={`${name} logo`}
-                  className="w-14 h-14 rounded-xl object-cover border-2 border-border shadow-premium transition-smooth group-hover:scale-110 group-hover:shadow-premium-lg"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover border-2 border-border shadow-premium transition-smooth group-hover:scale-110 group-hover:shadow-premium-lg"
                 />
                 {free_tier && (
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-accent rounded-full flex items-center justify-center shadow-accent">
-                    <Gift className="h-3 w-3 text-white" />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-gradient-accent rounded-full flex items-center justify-center shadow-accent">
+                    <Gift className="h-2.5 w-2.5 md:h-3 md:w-3 text-white" />
                   </div>
                 )}
               </div>
             ) : (
-              <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center border-2 border-border shadow-primary transition-smooth group-hover:scale-110">
-                <span className="text-lg font-bold text-primary-foreground">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-primary flex items-center justify-center border-2 border-border shadow-primary transition-smooth group-hover:scale-110">
+                <span className="text-base md:text-lg font-bold text-primary-foreground">
                   {name.charAt(0)}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Enhanced Content */}
+          {/* Mobile-Optimized Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-bold text-lg leading-tight line-clamp-1 group-hover:text-primary transition-smooth">
+            <div className="flex items-start justify-between gap-2 mb-1.5 md:mb-2">
+              <h3 className="font-bold text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary transition-smooth">
                 {name}
               </h3>
               {getPricingBadge()}
             </div>
 
             {description && (
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+              <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 mb-2 md:mb-3 leading-relaxed">
                 {description}
               </p>
             )}
 
             {/* Free Limit Highlight */}
             {free_limit && (
-              <div className="mb-3 p-2 bg-accent/10 border border-accent/20 rounded-lg">
+              <div className="mb-2 md:mb-3 p-1.5 md:p-2 bg-accent/10 border border-accent/20 rounded-lg">
                 <p className="text-xs font-medium text-accent flex items-center gap-1">
-                  <Gift className="h-3 w-3" />
-                  Free: {free_limit}
+                  <Gift className="h-3 w-3 flex-shrink-0" />
+                  <span className="truncate">Free: {free_limit}</span>
                 </p>
               </div>
             )}
 
             {/* Rating & Category */}
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
               <div className="flex items-center gap-1">
-                <StarRating rating={rating || 0} size={14} />
-                <span className="text-xs font-medium text-muted-foreground ml-1">
+                <StarRating rating={rating || 0} size={12} />
+                <span className="text-xs font-medium text-muted-foreground ml-0.5">
                   {rating?.toFixed(1)} ({reviews_count})
                 </span>
               </div>
               {category && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-xs px-1.5 py-0">
                   {category}
                 </Badge>
               )}
@@ -132,11 +132,11 @@ export function ToolCard(props: ToolCardProps) {
 
             {/* Tags */}
             {tags && tags.length > 0 && (
-              <div className="flex gap-1 mt-2 flex-wrap">
+              <div className="flex gap-1 mt-1.5 md:mt-2 flex-wrap">
                 {tags.slice(0, 3).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-xs px-2 py-0.5 bg-muted rounded-md text-muted-foreground"
+                    className="text-xs px-1.5 md:px-2 py-0.5 bg-muted rounded text-muted-foreground"
                   >
                     {tag}
                   </span>
@@ -147,14 +147,14 @@ export function ToolCard(props: ToolCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-5 pt-0 flex gap-2">
+      <CardFooter className="p-4 md:p-5 pt-0 flex gap-2">
         <Button
           asChild
-          size="default"
-          className="flex-1 bg-gradient-primary hover:shadow-primary transition-smooth"
+          size="sm"
+          className="flex-1 h-9 md:h-10 text-xs md:text-sm bg-gradient-primary hover:shadow-primary transition-smooth"
         >
           <Link to={`/tool/${id}`}>
-            <Eye className="h-4 w-4 mr-2" />
+            <Eye className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
             View Details
           </Link>
         </Button>
@@ -162,11 +162,11 @@ export function ToolCard(props: ToolCardProps) {
           <Button
             asChild
             variant="outline"
-            size="default"
-            className="hover-lift"
+            size="sm"
+            className="h-9 md:h-10 w-9 md:w-10 p-0 hover-lift flex-shrink-0"
           >
             <a href={website_url} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
             </a>
           </Button>
         )}

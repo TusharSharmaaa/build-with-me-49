@@ -79,26 +79,36 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        {/* Search Bar */}
+      <div className="space-y-8">
+        {/* Hero Search Section */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            placeholder="Search AI tools, free limits..."
-            className="pl-12 h-12 text-base rounded-2xl"
-            onFocus={handleSearchFocus}
-            readOnly
-          />
+          <div className="absolute inset-0 bg-gradient-primary opacity-5 rounded-3xl blur-3xl" />
+          <div className="relative">
+            <h1 className="text-3xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+              Discover Free AI Tools
+            </h1>
+            <p className="text-muted-foreground mb-4">
+              Find the best AI tools with transparent free limits and pricing
+            </p>
+            <div className="relative">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6 text-primary" />
+              <Input
+                placeholder="Search AI tools, free limits, categories..."
+                className="pl-14 h-14 text-base rounded-2xl shadow-premium-lg border-2 hover:border-primary transition-smooth"
+                onFocus={handleSearchFocus}
+                readOnly
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Category Chips */}
+        {/* Enhanced Category Chips */}
         {categories && categories.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide">
             {categories.map((category) => (
               <Badge
                 key={category.id}
-                variant="secondary"
-                className="cursor-pointer whitespace-nowrap px-4 py-2 text-sm hover:bg-primary hover:text-primary-foreground transition-colors"
+                className="cursor-pointer whitespace-nowrap px-5 py-3 text-sm font-medium bg-gradient-card hover:bg-gradient-primary hover:text-primary-foreground transition-smooth shadow-premium hover:shadow-primary hover-scale border-2"
                 onClick={() => handleCategoryClick(category.slug)}
               >
                 {category.name}
@@ -109,10 +119,15 @@ export default function Home() {
 
         {/* Trending Tools Carousel */}
         {showTrending && (
-          <section className="space-y-3">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">Trending Tools</h2>
+          <section className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-primary">
+                <TrendingUp className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">Trending Tools</h2>
+                <p className="text-sm text-muted-foreground">Most popular this week</p>
+              </div>
             </div>
             {trendingLoading ? (
               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -135,10 +150,15 @@ export default function Home() {
         )}
 
         {/* Recently Updated Tools */}
-        <section className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-semibold">Recently Updated Free Limits</h2>
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center shadow-accent">
+              <Clock className="h-5 w-5 text-accent-foreground" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Recently Updated</h2>
+              <p className="text-sm text-muted-foreground">Latest free tier updates</p>
+            </div>
           </div>
           {recentLoading ? (
             <div className="grid gap-3 md:grid-cols-2">
@@ -161,14 +181,14 @@ export default function Home() {
           )}
         </section>
 
-        {/* Quick Actions */}
-        <div className="grid gap-3 md:grid-cols-2">
-          <Button asChild size="lg" className="h-14">
+        {/* Enhanced Quick Actions */}
+        <div className="grid gap-4 md:grid-cols-2 mt-8">
+          <Button asChild size="lg" className="h-16 text-lg bg-gradient-primary hover:shadow-primary transition-smooth">
             <Link to="/categories">
               Browse All Categories
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="h-14">
+          <Button asChild size="lg" variant="outline" className="h-16 text-lg hover-lift">
             <Link to="/submit">
               Submit a Tool
             </Link>

@@ -12,6 +12,8 @@ import { Search, TrendingUp, Clock } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { initAds } from "@/lib/ads";
 import { useRemoteConfig } from "@/hooks/useRemoteConfig";
+import { ErrorState } from "@/components/ErrorState";
+import { withRetry } from "@/lib/network";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -23,55 +25,61 @@ export default function Home() {
   }, []);
 
   // Featured tool (highest featured_order)
-  const { data: featuredTool, isLoading: featuredLoading } = useQuery({
+  const { data: featuredTool, isLoading: featuredLoading, error: featuredError, refetch: refetchFeatured } = useQuery({
     queryKey: ["featured-tool"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ai_tools")
-        .select("*")
-        .eq("featured", true)
-        .order("featured_order", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("ai_tools")
+          .select("*")
+          .eq("featured", true)
+          .order("featured_order", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        
+        if (error) throw error;
+        return data;
+      });
     },
   });
 
   // Trending tools (top rated, excluding featured)
-  const { data: trendingTools, isLoading: trendingLoading } = useQuery({
+  const { data: trendingTools, isLoading: trendingLoading, error: trendingError } = useQuery({
     queryKey: ["trending-tools"],
     queryFn: async () => {
-      let query = supabase
-        .from("ai_tools")
-        .select("*")
-        .order("rating", { ascending: false })
-        .limit(6);
-      
-      if (featuredTool) {
-        query = query.neq("id", featuredTool.id);
-      }
-      
-      const { data, error } = await query;
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        let query = supabase
+          .from("ai_tools")
+          .select("*")
+          .order("rating", { ascending: false })
+          .limit(6);
+        
+        if (featuredTool) {
+          query = query.neq("id", featuredTool.id);
+        }
+        
+        const { data, error } = await query;
+        if (error) throw error;
+        return data;
+      });
     },
     enabled: featuredLoading === false,
   });
 
   // Recently updated tools
-  const { data: recentTools, isLoading: recentLoading } = useQuery({
+  const { data: recentTools, isLoading: recentLoading, error: recentError, refetch: refetchRecent } = useQuery({
     queryKey: ["recent-tools"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ai_tools")
-        .select("*")
-        .order("updated_at", { ascending: false })
-        .limit(8);
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("ai_tools")
+          .select("*")
+          .order("updated_at", { ascending: false })
+          .limit(8);
+        
+        if (error) throw error;
+        return data;
+      });
     },
   });
 
@@ -201,7 +209,12 @@ export default function Home() {
               <p className="text-xs md:text-sm text-muted-foreground truncate">Fresh updates</p>
             </div>
           </div>
-          {recentLoading ? (
+          {recentError ? (
+            <ErrorState
+              type="network"
+              onRetry={() => refetchRecent()}
+            />
+          ) : recentLoading ? (
             <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
               {[...Array(4)].map((_, i) => (
                 <ToolCardSkeleton key={i} />

@@ -1,9 +1,10 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { trackEvent } from "@/lib/analytics";
 import { initAds } from "@/lib/ads";
+import { ConsentModal } from "@/components/ConsentModal";
 
 // Eager load critical routes
 import Home from "./pages/Home";
@@ -40,6 +41,20 @@ function LoadingFallback() {
   );
 }
 
+// Route transitions wrapper
+function AnimatedRoutes({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  
+  return (
+    <div
+      key={location.pathname}
+      className="animate-fade-in"
+    >
+      {children}
+    </div>
+  );
+}
+
 function App() {
   useEffect(() => {
     trackEvent("open_app");
@@ -52,24 +67,27 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/category/:fieldId" element={<CategoryTools />} />
-            <Route path="/tool/:toolId" element={<ToolDetail />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/submit" element={<SubmitTool />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/premium" element={<PremiumTools />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <ConsentModal />
+        <AnimatedRoutes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/category/:fieldId" element={<CategoryTools />} />
+              <Route path="/tool/:toolId" element={<ToolDetail />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/submit" element={<SubmitTool />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/premium" element={<PremiumTools />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </AnimatedRoutes>
         <Toaster />
       </BrowserRouter>
     </QueryClientProvider>

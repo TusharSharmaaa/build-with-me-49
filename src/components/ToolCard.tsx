@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge";
 import { StarRating } from "./StarRating";
 import { ToolBadges } from "./ToolBadges";
 import { LazyImage } from "./LazyImage";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface ToolCardProps {
   id: string;
@@ -178,6 +179,11 @@ export function ToolCard(props: ToolCardProps) {
             View Details
           </Link>
         </Button>
+        <FavoriteButton
+          toolId={id}
+          size="sm"
+          className="h-9 md:h-10 w-9 md:w-10 flex-shrink-0"
+        />
         {website_url && (
           <Button
             asChild

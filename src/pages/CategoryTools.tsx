@@ -4,44 +4,51 @@ import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { ToolCard } from "@/components/ToolCard";
-import { CategoryFilters, FilterOptions } from "@/components/CategoryFilters";
+import { FilterSheet, FilterOptions } from "@/components/FilterSheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ToolCardSkeleton } from "@/components/skeletons/ToolCardSkeleton";
 import { ArrowLeft } from "lucide-react";
 import { BannerAd } from "@/components/ads/BannerAd";
+import { ErrorState } from "@/components/ErrorState";
+import { withRetry } from "@/lib/network";
 
 export default function CategoryTools() {
   const { fieldId } = useParams();
   const [filters, setFilters] = useState<FilterOptions>({
-    freeTier: null,
+    freeOnly: false,
     sortBy: "rating",
+    requiresFreeLimit: false,
   });
 
-  const { data: profession } = useQuery({
+  const { data: profession, error: professionError, refetch: refetchProfession } = useQuery({
     queryKey: ["profession", fieldId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("professions")
-        .select("*")
-        .eq("slug", fieldId)
-        .single();
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("professions")
+          .select("*")
+          .eq("slug", fieldId)
+          .single();
+        
+        if (error) throw error;
+        return data;
+      });
     },
   });
 
-  const { data: tools, isLoading } = useQuery({
+  const { data: tools, isLoading, error, refetch } = useQuery({
     queryKey: ["category-tools", fieldId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ai_tools")
-        .select("*")
-        .contains("profession_tags", [fieldId]);
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("ai_tools")
+          .select("*")
+          .contains("profession_tags", [fieldId]);
+        
+        if (error) throw error;
+        return data;
+      });
     },
     enabled: !!fieldId,
   });
@@ -52,9 +59,14 @@ export default function CategoryTools() {
 
     let filtered = [...tools];
 
-    // Filter by free tier
-    if (filters.freeTier !== null) {
-      filtered = filtered.filter(tool => tool.free_tier === filters.freeTier);
+    // Filter by free tier only
+    if (filters.freeOnly) {
+      filtered = filtered.filter(tool => tool.free_tier === true);
+    }
+
+    // Filter by free limit requirement
+    if (filters.requiresFreeLimit) {
+      filtered = filtered.filter(tool => tool.free_limit);
     }
 
     // Sort
@@ -65,7 +77,7 @@ export default function CategoryTools() {
       case "name":
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case "recent":
+      case "updated":
         filtered.sort((a, b) => 
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         );
@@ -95,17 +107,18 @@ export default function CategoryTools() {
             </div>
           </div>
           
-          <CategoryFilters onFilterChange={setFilters} currentFilters={filters} />
+          <FilterSheet filters={filters} onApply={setFilters} />
         </div>
 
-        {isLoading ? (
+        {error ? (
+          <ErrorState
+            type="network"
+            onRetry={() => refetch()}
+          />
+        ) : isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
-              <Card key={i}>
-                <CardContent className="pt-6">
-                  <Skeleton className="h-32" />
-                </CardContent>
-              </Card>
+              <ToolCardSkeleton key={i} />
             ))}
           </div>
         ) : filteredTools && filteredTools.length > 0 ? (
@@ -125,7 +138,7 @@ export default function CategoryTools() {
               <p className="text-muted-foreground mb-4">
                 No tools match your filters. Try adjusting them.
               </p>
-              <Button onClick={() => setFilters({ freeTier: null, sortBy: "rating" })}>
+              <Button onClick={() => setFilters({ freeOnly: false, sortBy: "rating", requiresFreeLimit: false })}>
                 Clear Filters
               </Button>
             </CardContent>

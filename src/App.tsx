@@ -1,10 +1,6 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ConsentModal } from "@/components/ConsentModal";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import CategoryTools from "./pages/CategoryTools";
@@ -25,10 +21,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Toaster />
-      <Sonner />
       <BrowserRouter>
-        <ConsentModal />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/categories" element={<Categories />} />

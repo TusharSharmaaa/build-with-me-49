@@ -36,7 +36,17 @@ export default function ToolDetail() {
     
     // Increment view count for interstitial ad
     incrementView();
-  }, [incrementView]);
+    
+    // Track analytics
+    if (toolId) {
+      import("@/lib/analytics").then(({ trackEvent }) => {
+        trackEvent('view_tool_detail', { tool_id: toolId });
+      });
+      import("@/lib/ads").then(({ trackDetailView }) => {
+        trackDetailView();
+      });
+    }
+  }, [incrementView, toolId]);
 
   const { data: tool, isLoading } = useQuery({
     queryKey: ["tool", toolId],

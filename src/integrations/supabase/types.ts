@@ -18,17 +18,20 @@ export type Database = {
         Row: {
           category: string | null
           created_at: string
+          curated: boolean | null
           description: string | null
           featured: boolean | null
           featured_order: number | null
           free_limit: string | null
           free_tier: boolean | null
+          has_watermark: boolean | null
           id: string
           logo_url: string | null
           name: string
           pricing_note: string | null
           profession_tags: string[] | null
           rating: number | null
+          requires_login: boolean | null
           reviews_count: number | null
           updated_at: string
           website_url: string | null
@@ -36,17 +39,20 @@ export type Database = {
         Insert: {
           category?: string | null
           created_at?: string
+          curated?: boolean | null
           description?: string | null
           featured?: boolean | null
           featured_order?: number | null
           free_limit?: string | null
           free_tier?: boolean | null
+          has_watermark?: boolean | null
           id?: string
           logo_url?: string | null
           name: string
           pricing_note?: string | null
           profession_tags?: string[] | null
           rating?: number | null
+          requires_login?: boolean | null
           reviews_count?: number | null
           updated_at?: string
           website_url?: string | null
@@ -54,17 +60,20 @@ export type Database = {
         Update: {
           category?: string | null
           created_at?: string
+          curated?: boolean | null
           description?: string | null
           featured?: boolean | null
           featured_order?: number | null
           free_limit?: string | null
           free_tier?: boolean | null
+          has_watermark?: boolean | null
           id?: string
           logo_url?: string | null
           name?: string
           pricing_note?: string | null
           profession_tags?: string[] | null
           rating?: number | null
+          requires_login?: boolean | null
           reviews_count?: number | null
           updated_at?: string
           website_url?: string | null
@@ -121,6 +130,30 @@ export type Database = {
           id?: string
           name?: string
           slug?: string
+        }
+        Relationships: []
+      }
+      remote_config: {
+        Row: {
+          config_key: string
+          config_value: Json
+          created_at: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          config_key: string
+          config_value: Json
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          config_key?: string
+          config_value?: Json
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
         }
         Relationships: []
       }

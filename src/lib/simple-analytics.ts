@@ -10,7 +10,8 @@ type EventName =
   | "favorite_remove"
   | "share_tool"
   | "submit_tool"
-  | "click_open_website";
+  | "click_open_website"
+  | "copy_prompt";
 
 export function trackEvent(event: EventName, data?: Record<string, any>) {
   console.log(`[Analytics] ${event}`, data);

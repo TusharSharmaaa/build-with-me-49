@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/system/AppLayout";
 import { supabase } from "@/lib/supabase-service";
-import { setTestMode, getTestMode, setPersonalizedAds, getPersonalizedAds } from "@/lib/simple-ads";
+import { setTestMode, getTestMode } from "@/lib/simple-ads";
 
 export function ProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -10,7 +10,6 @@ export function ProfilePage() {
   const [darkMode, setDarkMode] = useState(false);
   const [dataSaver, setDataSaver] = useState(false);
   const [testAds, setTestAds] = useState(getTestMode());
-  const [personalizedAds, setPersonalizedAdsState] = useState(getPersonalizedAds());
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
@@ -50,12 +49,6 @@ export function ProfilePage() {
     const newValue = !testAds;
     setTestAds(newValue);
     setTestMode(newValue);
-  };
-
-  const handlePersonalizedAdsToggle = () => {
-    const newValue = !personalizedAds;
-    setPersonalizedAdsState(newValue);
-    setPersonalizedAds(newValue);
   };
 
   return (
@@ -132,20 +125,6 @@ export function ProfilePage() {
                 type="checkbox"
                 checked={testAds}
                 onChange={handleTestAdsToggle}
-                className="sr-only peer"
-              />
-              <div className="w-full h-full bg-muted rounded-full peer-checked:bg-primary transition-colors cursor-pointer" />
-              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-6" />
-            </label>
-          </div>
-
-          <div className="p-4 flex items-center justify-between">
-            <span className="font-medium">Personalized Ads</span>
-            <label className="relative inline-block w-12 h-6">
-              <input
-                type="checkbox"
-                checked={personalizedAds}
-                onChange={handlePersonalizedAdsToggle}
                 className="sr-only peer"
               />
               <div className="w-full h-full bg-muted rounded-full peer-checked:bg-primary transition-colors cursor-pointer" />

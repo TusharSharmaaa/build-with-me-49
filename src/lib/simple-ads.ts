@@ -48,19 +48,16 @@ export async function showRewardedAd(): Promise<boolean> {
   });
 }
 
-// Settings
+// Settings - Test ads always enabled by default for production
 export function getTestMode(): boolean {
-  return localStorage.getItem(STORAGE_KEYS.testMode) === "true";
+  const stored = localStorage.getItem(STORAGE_KEYS.testMode);
+  if (stored === null) {
+    localStorage.setItem(STORAGE_KEYS.testMode, "true");
+    return true;
+  }
+  return stored === "true";
 }
 
 export function setTestMode(enabled: boolean) {
   localStorage.setItem(STORAGE_KEYS.testMode, enabled.toString());
-}
-
-export function getPersonalizedAds(): boolean {
-  return localStorage.getItem(STORAGE_KEYS.personalized) !== "false";
-}
-
-export function setPersonalizedAds(enabled: boolean) {
-  localStorage.setItem(STORAGE_KEYS.personalized, enabled.toString());
 }

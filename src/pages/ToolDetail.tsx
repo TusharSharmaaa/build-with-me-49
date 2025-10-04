@@ -34,7 +34,7 @@ export default function ToolDetail() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
     
-    // Increment view count for interstitial ad
+    // Increment view count for interstitial ad (only once per page load)
     incrementView();
     
     // Track analytics
@@ -46,7 +46,8 @@ export default function ToolDetail() {
         trackDetailView();
       });
     }
-  }, [incrementView, toolId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolId]); // Only run when toolId changes
 
   const { data: tool, isLoading } = useQuery({
     queryKey: ["tool", toolId],

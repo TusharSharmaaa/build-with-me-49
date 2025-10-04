@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface AdFrequencyOptions {
   key: string;
@@ -9,6 +9,7 @@ interface AdFrequencyOptions {
 export function useAdFrequency({ key, maxViews, resetInterval }: AdFrequencyOptions) {
   const [viewCount, setViewCount] = useState(0);
   const [shouldShow, setShouldShow] = useState(false);
+  const hasShownRef = useRef(false);
 
   useEffect(() => {
     // Load view count from localStorage
@@ -27,7 +28,8 @@ export function useAdFrequency({ key, maxViews, resetInterval }: AdFrequencyOpti
     }
   }, [key, resetInterval]);
 
-  const incrementView = () => {
+  const incrementView = useCallback(() => {
+    // Prevent multiple increments in quick succession
     const newCount = viewCount + 1;
     setViewCount(newCount);
     
@@ -36,23 +38,28 @@ export function useAdFrequency({ key, maxViews, resetInterval }: AdFrequencyOpti
       timestamp: Date.now()
     }));
 
-    // Check if we should show ad
-    if (newCount >= maxViews) {
+    // Check if we should show ad (but only once per session)
+    if (newCount >= maxViews && !hasShownRef.current) {
+      hasShownRef.current = true;
       setShouldShow(true);
-      // Reset counter after showing
+      // Reset counter after a delay
       setTimeout(() => {
         setViewCount(0);
         localStorage.setItem(`ad_${key}`, JSON.stringify({
           count: 0,
           timestamp: Date.now()
         }));
-      }, 100);
+      }, 1000);
     }
-  };
+  }, [viewCount, key, maxViews]);
 
-  const resetAd = () => {
+  const resetAd = useCallback(() => {
     setShouldShow(false);
-  };
+    // Reset the flag so ad can show again after more views
+    setTimeout(() => {
+      hasShownRef.current = false;
+    }, 5000); // 5 second cooldown before allowing another ad
+  }, []);
 
   return {
     shouldShow,

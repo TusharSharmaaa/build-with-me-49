@@ -4,6 +4,8 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { StarRating } from "./StarRating";
+import { ToolBadges } from "./ToolBadges";
+import { LazyImage } from "./LazyImage";
 
 interface ToolCardProps {
   id: string;
@@ -18,6 +20,11 @@ interface ToolCardProps {
   website_url?: string | null;
   tags?: string[] | null;
   category?: string | null;
+  featured?: boolean;
+  curated?: boolean;
+  featured_order?: number;
+  created_at?: string;
+  compact?: boolean;
 }
 
 export function ToolCard(props: ToolCardProps) {
@@ -34,6 +41,11 @@ export function ToolCard(props: ToolCardProps) {
     website_url,
     tags,
     category,
+    featured = false,
+    curated = false,
+    featured_order = 0,
+    created_at,
+    compact = false,
   } = props;
 
   // Determine pricing badge with icon
@@ -63,14 +75,14 @@ export function ToolCard(props: ToolCardProps) {
   };
 
   return (
-    <Card className="card-premium group overflow-hidden">
+    <Card className={`card-premium group overflow-hidden ${featured ? 'border-2 border-primary shadow-lg' : ''}`}>
       <CardContent className="p-4 md:p-5">
         <div className="flex gap-3 md:gap-4">
           {/* Mobile-Optimized Logo */}
           <div className="flex-shrink-0">
             {logo_url ? (
               <div className="relative">
-                <img
+                <LazyImage
                   src={logo_url}
                   alt={`${name} logo`}
                   className="w-12 h-12 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover border-2 border-border transition-transform group-hover:scale-105"
@@ -99,8 +111,16 @@ export function ToolCard(props: ToolCardProps) {
               {getPricingBadge()}
             </div>
 
+            <ToolBadges
+              featured={featured}
+              curated={curated}
+              featuredOrder={featured_order}
+              rating={rating}
+              createdAt={created_at}
+            />
+
             {description && (
-              <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 mb-2 md:mb-3 leading-relaxed">
+              <p className={`text-xs md:text-sm text-muted-foreground mb-2 md:mb-3 leading-relaxed ${compact ? 'line-clamp-1' : 'line-clamp-2'}`}>
                 {description}
               </p>
             )}

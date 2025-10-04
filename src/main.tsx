@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import App from "./App.tsx";
 import "./index.css";
 import { ErrorBoundary } from "./components/system/ErrorBoundary";
+import { LocaleProvider } from "./contexts/LocaleContext";
 
 // Register service worker
 if ('serviceWorker' in navigator) {
@@ -17,9 +18,11 @@ if ('serviceWorker' in navigator) {
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <App />
-      </ThemeProvider>
+      <LocaleProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <App />
+        </ThemeProvider>
+      </LocaleProvider>
     </ErrorBoundary>
   </React.StrictMode>
 );

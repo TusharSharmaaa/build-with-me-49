@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { ToolCard } from "@/components/ToolCard";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Clock, XCircle, X } from "lucide-react";
 import { BannerAd } from "@/components/ads/BannerAd";
 import { RewardedAd } from "@/components/ads/RewardedAd";
 import { useAdFrequency } from "@/hooks/useAdFrequency";
@@ -16,12 +16,14 @@ import { EmptyState } from "@/components/EmptyState";
 import { ToolCardSkeleton } from "@/components/skeletons/ToolCardSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { withRetry } from "@/lib/network";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
+import { trackSearch } from "@/lib/ads";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const debouncedSearch = useDebounce(searchQuery, 250);
   const { toast } = useToast();
+  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
   
   const {
     shouldShow: shouldShowRewardedAd,
@@ -36,15 +38,8 @@ export default function SearchPage() {
 
   const [showBonusTools, setShowBonusTools] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("recentSearches");
-    if (stored) setRecentSearches(JSON.parse(stored));
-  }, []);
-
-  const addRecentSearch = (query: string) => {
-    const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
-    setRecentSearches(updated);
-    localStorage.setItem("recentSearches", JSON.stringify(updated));
+  const handleHistoryClick = (query: string) => {
+    setSearchQuery(query);
   };
 
   const { data: tools, isLoading } = useQuery({
@@ -53,8 +48,9 @@ export default function SearchPage() {
       if (!debouncedSearch || debouncedSearch.length < 3) return [];
       
       trackEvent("search_query", { query: debouncedSearch });
+      trackSearch();
       incrementSearch();
-      addRecentSearch(debouncedSearch);
+      addToHistory(debouncedSearch);
       
       return withRetry(async () => {
         const { data, error } = await supabase
@@ -82,35 +78,64 @@ export default function SearchPage() {
   return (
     <Layout title="Search" showSearch={false}>
       <div className="space-y-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search AI tools..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12"
-            autoFocus
-          />
-        </div>
-
-        {recentSearches.length > 0 && !searchQuery && (
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium">Recent searches</p>
-            <div className="flex flex-wrap gap-2">
-              {recentSearches.map((term) => (
-                <Badge
-                  key={term}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => setSearchQuery(term)}
-                >
-                  {term}
-                </Badge>
-              ))}
-            </div>
+        <div className="space-y-3">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              placeholder="Search AI tools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 pr-10 h-12 text-base rounded-xl"
+              autoFocus
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
-        )}
+
+          {!searchQuery && history.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>Recent Searches</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearHistory}
+                  className="h-auto py-1 px-2 text-xs"
+                >
+                  Clear All
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {history.slice(0, 5).map((query) => (
+                  <Badge
+                    key={query}
+                    variant="outline"
+                    className="cursor-pointer hover:bg-accent group"
+                    onClick={() => handleHistoryClick(query)}
+                  >
+                    {query}
+                    <XCircle
+                      className="ml-1.5 h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFromHistory(query);
+                      }}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         {searchCount >= 8 && !showBonusTools && (
           <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-4 text-center space-y-2">

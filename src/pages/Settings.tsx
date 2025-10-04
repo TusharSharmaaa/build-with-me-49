@@ -8,11 +8,13 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
-import { ExternalLink, Bell, Palette, Wifi, Shield, Info } from "lucide-react";
+import { ExternalLink, Bell, Palette, Wifi, Shield, Info, Globe, Star } from "lucide-react";
 import { toast } from "sonner";
+import { useLocale } from "@/contexts/LocaleContext";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
+  const { locale, setLocale } = useLocale();
   const { isSupported, permission, requestPermission } = usePushNotifications();
   const [dataSaver, setDataSaver] = useState(false);
   const [personalizedAds, setPersonalizedAds] = useState(true);
@@ -82,6 +84,41 @@ export default function Settings() {
                 Push notifications not supported in this browser
               </p>
             )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Globe className="h-5 w-5" />
+              Language
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="language">Language</Label>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Choose your preferred language
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant={locale === "en" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setLocale("en")}
+                >
+                  EN
+                </Button>
+                <Button
+                  variant={locale === "hi" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setLocale("hi")}
+                >
+                  हिन्दी
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -206,7 +243,10 @@ export default function Settings() {
                 className="w-full justify-between"
                 onClick={handleRateApp}
               >
-                Rate this app
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4" />
+                  Rate on Play Store
+                </div>
                 <ExternalLink className="h-4 w-4" />
               </Button>
             </div>

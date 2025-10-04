@@ -22,19 +22,42 @@ export default function Home() {
     initAds({ appId: 'ca-app-pub-TEST-APP-ID', testMode: true });
   }, []);
 
-  // Trending tools (top rated)
+  // Featured tool (highest featured_order)
+  const { data: featuredTool, isLoading: featuredLoading } = useQuery({
+    queryKey: ["featured-tool"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("ai_tools")
+        .select("*")
+        .eq("featured", true)
+        .order("featured_order", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Trending tools (top rated, excluding featured)
   const { data: trendingTools, isLoading: trendingLoading } = useQuery({
     queryKey: ["trending-tools"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("ai_tools")
         .select("*")
         .order("rating", { ascending: false })
         .limit(6);
       
+      if (featuredTool) {
+        query = query.neq("id", featuredTool.id);
+      }
+      
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
+    enabled: featuredLoading === false,
   });
 
   // Recently updated tools
@@ -102,6 +125,22 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Featured Tool of the Week */}
+        {featuredTool && (
+          <section className="space-y-3 md:space-y-4">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-accent flex items-center justify-center flex-shrink-0">
+                <Clock className="h-4 w-4 md:h-5 md:w-5 text-accent-foreground" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg md:text-2xl font-bold leading-tight">Featured Tool of the Week</h2>
+                <p className="text-xs md:text-sm text-muted-foreground truncate">Handpicked by our experts</p>
+              </div>
+            </div>
+            <ToolCard {...featuredTool} featured />
+          </section>
+        )}
 
         {/* Mobile-Optimized Category Chips */}
         {categories && categories.length > 0 && (

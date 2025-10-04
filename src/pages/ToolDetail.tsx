@@ -14,6 +14,10 @@ import { ReviewSection } from "@/components/ReviewSection";
 import { InterstitialAd } from "@/components/ads/InterstitialAd";
 import { useAdFrequency } from "@/hooks/useAdFrequency";
 import { ToolDetailedInfo } from "@/components/ToolDetailedInfo";
+import { ShareButton } from "@/components/ShareButton";
+import { SimilarTools } from "@/components/SimilarTools";
+import { ToolBadges } from "@/components/ToolBadges";
+import { LazyImage } from "@/components/LazyImage";
 
 export default function ToolDetail() {
   const { toolId } = useParams();
@@ -169,7 +173,7 @@ export default function ToolDetail() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-4">
                 {tool.logo_url && (
-                  <img
+                  <LazyImage
                     src={tool.logo_url}
                     alt={`${tool.name} logo`}
                     className="w-16 h-16 rounded-lg object-cover"
@@ -186,13 +190,12 @@ export default function ToolDetail() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleShare}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
+                <ShareButton
+                  toolName={tool.name}
+                  description={tool.description || undefined}
+                  profession={tool.category || undefined}
+                  freeLimit={tool.free_limit || undefined}
+                />
                 <Button
                   variant={isFavorited ? "default" : "outline"}
                   size="icon"
@@ -205,6 +208,13 @@ export default function ToolDetail() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+            <ToolBadges
+              featured={tool.featured}
+              curated={tool.curated}
+              rating={tool.rating}
+              createdAt={tool.created_at}
+            />
+
             {tool.free_tier && (
               <div className="flex gap-2">
                 <Badge variant="secondary">Free Tier Available</Badge>
@@ -243,6 +253,13 @@ export default function ToolDetail() {
         <ToolDetailedInfo toolName={tool.name} category={tool.category} />
 
         <ReviewSection toolId={toolId!} />
+
+        {/* Similar Tools */}
+        <SimilarTools
+          currentToolId={tool.id}
+          category={tool.category || undefined}
+          professionTags={tool.profession_tags || undefined}
+        />
       </div>
 
       {/* Interstitial Ad Modal */}

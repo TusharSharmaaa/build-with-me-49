@@ -2,7 +2,7 @@ import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Bell, Shield, Info, FileText, Smartphone } from "lucide-react";
+import { ArrowLeft, Bell, Shield, Info, FileText } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -12,12 +12,10 @@ import { useState, useEffect } from "react";
 
 export default function Settings() {
   const { permission, isSupported, requestPermission } = usePushNotifications();
-  const [testAds, setTestAds] = useState(false);
   const [personalizedAds, setPersonalizedAds] = useState(true);
 
   useEffect(() => {
-    setTestAds(localStorage.getItem('ad_test_mode') === 'true');
-    setPersonalizedAds(localStorage.getItem('ad_personalization_consent') === 'yes');
+    setPersonalizedAds(localStorage.getItem('ad_personalization_consent') !== 'no');
   }, []);
 
   const handleNotificationToggle = async (enabled: boolean) => {
@@ -78,8 +76,8 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5" />
-              Ad Preferences
+              <Shield className="h-5 w-5" />
+              Privacy
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -87,7 +85,7 @@ export default function Settings() {
               <div className="space-y-0.5">
                 <Label>Personalized Ads</Label>
                 <p className="text-sm text-muted-foreground">
-                  Show ads based on your interests
+                  Allow ads tailored to your interests (helps keep this app free)
                 </p>
               </div>
               <Switch
@@ -99,23 +97,9 @@ export default function Settings() {
                 }}
               />
             </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Use Test Ads</Label>
-                <p className="text-sm text-muted-foreground">
-                  Show test ads instead of real ones
-                </p>
-              </div>
-              <Switch
-                checked={testAds}
-                onCheckedChange={(checked) => {
-                  setTestAds(checked);
-                  localStorage.setItem('ad_test_mode', String(checked));
-                  toast.success(checked ? 'Test ads enabled' : 'Test ads disabled');
-                }}
-              />
-            </div>
+            <p className="text-xs text-muted-foreground">
+              You can change this anytime. Disabling personalized ads means you'll still see ads, but they won't be based on your activity.
+            </p>
           </CardContent>
         </Card>
 

@@ -11,7 +11,48 @@ import { Loader2, Sparkles } from "lucide-react";
 import { z } from "zod";
 
 const emailSchema = z.string().email("Invalid email address");
-const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .refine((val) => /[A-Z]/.test(val), {
+    message: "Password must include at least one uppercase letter",
+  })
+  .refine((val) => /[a-z]/.test(val), {
+    message: "Password must include at least one lowercase letter",
+  })
+  .refine((val) => /\d/.test(val), {
+    message: "Password must include at least one number",
+  })
+  .refine((val) => /[^A-Za-z0-9]/.test(val), {
+    message: "Password must include at least one symbol",
+  });
+
+// SHA-1 hash utility (required for Have I Been Pwned k-anonymity API)
+async function sha1Hex(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  return hashHex.toUpperCase();
+}
+
+// Check if a password appears in known breaches using HIBP range API
+async function isPasswordPwned(password: string): Promise<boolean> {
+  const hash = await sha1Hex(password);
+  const prefix = hash.slice(0, 5);
+  const suffix = hash.slice(5);
+  const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
+    headers: { "Add-Padding": "true" },
+  });
+  if (!res.ok) throw new Error("Failed to verify password safety");
+  const text = await res.text();
+  // Each line: SUFFIX:COUNT
+  return text.split("\n").some((line) => {
+    const [suf, count] = line.trim().split(":");
+    return suf === suffix && Number(count) > 0;
+  });
+}
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +92,28 @@ export default function Auth() {
         toast({
           title: "Validation Error",
           description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    // Prevent compromised passwords on signup
+    if (isSignUp) {
+      try {
+        const pwned = await isPasswordPwned(password);
+        if (pwned) {
+          toast({
+            title: "Weak or Compromised Password",
+            description: "This password appears in known data breaches. Choose a stronger one.",
+            variant: "destructive",
+          });
+          return;
+        }
+      } catch (err) {
+        toast({
+          title: "Password Safety Check Failed",
+          description: "We couldn't verify password safety. Please try again or use a different password.",
           variant: "destructive",
         });
         return;
@@ -214,7 +277,7 @@ export default function Auth() {
               />
               {isSignUp && (
                 <p className="text-xs text-muted-foreground">
-                  Must be at least 6 characters
+                  Password must be 8+ chars and include upper, lower, number, and symbol. We also block passwords found in known data breaches.
                 </p>
               )}
             </div>

@@ -8,7 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, TrendingUp, Clock } from "lucide-react";
+import { Search, TrendingUp, Clock, FolderOpen, Workflow, ChevronRight } from "lucide-react";
+import { WebsiteSchema } from "@/components/JsonLd";
 import { trackEvent } from "@/lib/analytics";
 import { initAds } from "@/lib/ads";
 import { useRemoteConfig } from "@/hooks/useRemoteConfig";
@@ -97,6 +98,32 @@ export default function Home() {
     },
   });
 
+  // Collections preview
+  const { data: collections } = useQuery({
+    queryKey: ["collections-preview"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("collections")
+        .select("*")
+        .limit(3);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Workflows preview
+  const { data: workflows } = useQuery({
+    queryKey: ["workflows-preview"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("workflows")
+        .select("*")
+        .limit(3);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const handleSearchFocus = () => {
     navigate('/search');
   };
@@ -110,6 +137,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <WebsiteSchema />
       <div className="space-y-6 md:space-y-8 pb-6">
         {/* Mobile-Optimized Hero */}
         <div className="relative">
@@ -235,16 +263,94 @@ export default function Home() {
           )}
         </section>
 
+        {/* Curated Collections */}
+        {collections && collections.length > 0 && (
+          <section className="space-y-3 md:space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <FolderOpen className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                </div>
+                <h2 className="text-lg md:text-2xl font-bold">Curated Collections</h2>
+              </div>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/collections">
+                  View All
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-3">
+              {collections.map((collection) => (
+                <Link key={collection.id} to={`/collection/${collection.slug}`}>
+                  <Card className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full">
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">{collection.name}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {collection.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Popular Workflows */}
+        {workflows && workflows.length > 0 && (
+          <section className="space-y-3 md:space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <Workflow className="h-4 w-4 md:h-5 md:w-5 text-accent" />
+                </div>
+                <h2 className="text-lg md:text-2xl font-bold">Popular Workflows</h2>
+              </div>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/workflows">
+                  View All
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-3">
+              {workflows.map((workflow) => (
+                <Link key={workflow.id} to={`/workflow/${workflow.slug}`}>
+                  <Card className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full">
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">{workflow.name}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {workflow.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Mobile-Optimized Quick Actions */}
-        <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2 pt-2">
-          <Button asChild size="lg" className="h-12 md:h-14 text-sm md:text-base bg-gradient-primary transition-colors">
+        <div className="grid gap-3 md:gap-4 grid-cols-2 md:grid-cols-4 pt-2">
+          <Button asChild size="lg" className="h-12 md:h-14 text-xs md:text-sm bg-gradient-primary">
             <Link to="/categories">
-              Browse All Categories
+              Browse Categories
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="h-12 md:h-14 text-sm md:text-base">
+          <Button asChild size="lg" variant="outline" className="h-12 md:h-14 text-xs md:text-sm">
+            <Link to="/compare">
+              Compare Tools
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12 md:h-14 text-xs md:text-sm">
+            <Link to="/workflows">
+              Workflows
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12 md:h-14 text-xs md:text-sm">
             <Link to="/submit">
-              Submit a Tool
+              Submit Tool
             </Link>
           </Button>
         </div>

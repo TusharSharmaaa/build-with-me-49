@@ -17,66 +17,204 @@ export type Database = {
       ai_tools: {
         Row: {
           category: string | null
+          cons: string[] | null
           created_at: string
           curated: boolean | null
           description: string | null
+          description_hi: string | null
+          editors_pick: boolean | null
           featured: boolean | null
           featured_order: number | null
+          features: string[] | null
           free_limit: string | null
+          free_requires_login: boolean | null
           free_tier: boolean | null
           has_watermark: boolean | null
           id: string
+          input_examples: string[] | null
+          last_verified_at: string | null
           logo_url: string | null
+          modalities: string[] | null
           name: string
+          output_examples: string[] | null
+          pricing_model: string | null
           pricing_note: string | null
+          pricing_url: string | null
+          privacy_note: string | null
           profession_tags: string[] | null
+          pros: string[] | null
+          quickstart: string[] | null
+          rate_limit_note: string | null
           rating: number | null
+          region_limits: string | null
           requires_login: boolean | null
           reviews_count: number | null
+          sample_prompts: string[] | null
+          screenshots: string[] | null
+          security_note: string | null
+          slug: string | null
+          tips: string[] | null
           updated_at: string
+          use_cases: string[] | null
+          verified: boolean | null
+          video_url: string | null
           website_url: string | null
         }
         Insert: {
           category?: string | null
+          cons?: string[] | null
           created_at?: string
           curated?: boolean | null
           description?: string | null
+          description_hi?: string | null
+          editors_pick?: boolean | null
           featured?: boolean | null
           featured_order?: number | null
+          features?: string[] | null
           free_limit?: string | null
+          free_requires_login?: boolean | null
           free_tier?: boolean | null
           has_watermark?: boolean | null
           id?: string
+          input_examples?: string[] | null
+          last_verified_at?: string | null
           logo_url?: string | null
+          modalities?: string[] | null
           name: string
+          output_examples?: string[] | null
+          pricing_model?: string | null
           pricing_note?: string | null
+          pricing_url?: string | null
+          privacy_note?: string | null
           profession_tags?: string[] | null
+          pros?: string[] | null
+          quickstart?: string[] | null
+          rate_limit_note?: string | null
           rating?: number | null
+          region_limits?: string | null
           requires_login?: boolean | null
           reviews_count?: number | null
+          sample_prompts?: string[] | null
+          screenshots?: string[] | null
+          security_note?: string | null
+          slug?: string | null
+          tips?: string[] | null
           updated_at?: string
+          use_cases?: string[] | null
+          verified?: boolean | null
+          video_url?: string | null
           website_url?: string | null
         }
         Update: {
           category?: string | null
+          cons?: string[] | null
           created_at?: string
           curated?: boolean | null
           description?: string | null
+          description_hi?: string | null
+          editors_pick?: boolean | null
           featured?: boolean | null
           featured_order?: number | null
+          features?: string[] | null
           free_limit?: string | null
+          free_requires_login?: boolean | null
           free_tier?: boolean | null
           has_watermark?: boolean | null
           id?: string
+          input_examples?: string[] | null
+          last_verified_at?: string | null
           logo_url?: string | null
+          modalities?: string[] | null
           name?: string
+          output_examples?: string[] | null
+          pricing_model?: string | null
           pricing_note?: string | null
+          pricing_url?: string | null
+          privacy_note?: string | null
           profession_tags?: string[] | null
+          pros?: string[] | null
+          quickstart?: string[] | null
+          rate_limit_note?: string | null
           rating?: number | null
+          region_limits?: string | null
           requires_login?: boolean | null
           reviews_count?: number | null
+          sample_prompts?: string[] | null
+          screenshots?: string[] | null
+          security_note?: string | null
+          slug?: string | null
+          tips?: string[] | null
           updated_at?: string
+          use_cases?: string[] | null
+          verified?: boolean | null
+          video_url?: string | null
           website_url?: string | null
+        }
+        Relationships: []
+      }
+      collection_items: {
+        Row: {
+          collection_id: string
+          created_at: string | null
+          id: string
+          rank: number | null
+          tool_id: string
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string | null
+          id?: string
+          rank?: number | null
+          tool_id: string
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string | null
+          id?: string
+          rank?: number | null
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_items_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_items_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
         }
         Relationships: []
       }
@@ -249,6 +387,41 @@ export type Database = {
         }
         Relationships: []
       }
+      track_usage: {
+        Row: {
+          favorites: number | null
+          id: string
+          last_opened_at: string | null
+          opens: number | null
+          tool_id: string
+          user_id: string | null
+        }
+        Insert: {
+          favorites?: number | null
+          id?: string
+          last_opened_at?: string | null
+          opens?: number | null
+          tool_id: string
+          user_id?: string | null
+        }
+        Update: {
+          favorites?: number | null
+          id?: string
+          last_opened_at?: string | null
+          opens?: number | null
+          tool_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_usage_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -267,6 +440,39 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      workflows: {
+        Row: {
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          professions: string[] | null
+          slug: string
+          steps: Json | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          professions?: string[] | null
+          slug: string
+          steps?: Json | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          professions?: string[] | null
+          slug?: string
+          steps?: Json | null
         }
         Relationships: []
       }

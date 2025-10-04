@@ -18,6 +18,8 @@ import { ShareButton } from "@/components/ShareButton";
 import { SimilarTools } from "@/components/SimilarTools";
 import { ToolBadges } from "@/components/ToolBadges";
 import { LazyImage } from "@/components/LazyImage";
+import { RichToolDetail } from "@/components/RichToolDetail";
+import { ToolSchema } from "@/components/JsonLd";
 
 export default function ToolDetail() {
   const { toolId } = useParams();
@@ -159,6 +161,7 @@ export default function ToolDetail() {
 
   return (
     <Layout>
+      <ToolSchema tool={tool} />
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
@@ -231,10 +234,45 @@ export default function ToolDetail() {
               </div>
             )}
 
-            {tool.pricing_note && (
-              <div>
-                <h3 className="font-semibold mb-2">Pricing</h3>
-                <p className="text-muted-foreground">{tool.pricing_note}</p>
+            {/* Pricing Details */}
+            {(tool.pricing_note || tool.pricing_model || tool.pricing_url || tool.rate_limit_note) && (
+              <div className="space-y-3">
+                <h3 className="font-semibold">Pricing & Limits</h3>
+                {tool.pricing_model && (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">{tool.pricing_model}</Badge>
+                  </div>
+                )}
+                {tool.pricing_note && (
+                  <p className="text-sm text-muted-foreground">{tool.pricing_note}</p>
+                )}
+                {tool.rate_limit_note && (
+                  <p className="text-sm">
+                    <span className="font-medium">Rate limit:</span> {tool.rate_limit_note}
+                  </p>
+                )}
+                {tool.pricing_url && (
+                  <Button asChild variant="outline" size="sm">
+                    <a href={tool.pricing_url} target="_blank" rel="noopener noreferrer">
+                      View Full Pricing
+                      <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {/* Modalities */}
+            {tool.modalities && tool.modalities.length > 0 && (
+              <div className="space-y-2">
+                <h3 className="font-semibold text-sm">Supported Modalities</h3>
+                <div className="flex flex-wrap gap-2">
+                  {tool.modalities.map((modality: string, i: number) => (
+                    <Badge key={i} variant="outline" className="capitalize">
+                      {modality}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -249,8 +287,8 @@ export default function ToolDetail() {
           </CardContent>
         </Card>
 
-        {/* Rich Knowledge Content */}
-        <ToolDetailedInfo toolName={tool.name} category={tool.category} />
+        {/* Rich Content Sections */}
+        <RichToolDetail tool={tool} />
 
         <ReviewSection toolId={toolId!} />
 

@@ -23,6 +23,13 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const Admin = lazy(() => import("./pages/Admin"));
 const PremiumTools = lazy(() => import("./pages/PremiumTools"));
+const Compare = lazy(() => import("./pages/Compare"));
+const Collections = lazy(() => import("./pages/Collections"));
+const CollectionDetail = lazy(() => import("./pages/CollectionDetail"));
+const Workflows = lazy(() => import("./pages/Workflows"));
+const WorkflowDetail = lazy(() => import("./pages/WorkflowDetail"));
+const About = lazy(() => import("./pages/About"));
+const Changelog = lazy(() => import("./pages/Changelog"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +82,11 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/category/:fieldId" element={<CategoryTools />} />
               <Route path="/tool/:toolId" element={<ToolDetail />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/collections" element={<Collections />} />
+              <Route path="/collection/:slug" element={<CollectionDetail />} />
+              <Route path="/workflows" element={<Workflows />} />
+              <Route path="/workflow/:slug" element={<WorkflowDetail />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/profile" element={<Profile />} />
@@ -82,6 +94,8 @@ function App() {
               <Route path="/submit" element={<SubmitTool />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/premium" element={<PremiumTools />} />
               <Route path="*" element={<NotFound />} />

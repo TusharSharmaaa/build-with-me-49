@@ -8,6 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Safe area insets for notched devices */
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
     /* Enhanced Premium Theme */
     --background: 220 20% 98%;
     --foreground: 215 25% 15%;

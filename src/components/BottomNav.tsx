@@ -15,7 +15,7 @@ export function BottomNav() {
   ];
   
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border z-50 pb-safe">
       <div className="flex justify-around items-center h-16 max-w-screen-xl mx-auto">
         {navItems.map(({ icon: Icon, label, path }) => {
           const active = isActive(path);
@@ -23,11 +23,12 @@ export function BottomNav() {
             <Link
               key={path}
               to={path}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center flex-1 h-full transition-colors min-h-[44px] ${
                 active
                   ? "text-primary"
                   : "text-muted-foreground"
               }`}
+              aria-label={label}
             >
               <Icon 
                 className="h-6 w-6 mb-0.5" 

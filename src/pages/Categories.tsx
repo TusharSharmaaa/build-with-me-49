@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { Search, Grid3x3 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { Link } from "react-router-dom";
+import { CategorySkeleton } from "@/components/skeletons/CategorySkeleton";
+import { EmptyState } from "@/components/EmptyState";
+import { withRetry } from "@/lib/network";
 
 export default function Categories() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,33 +17,36 @@ export default function Categories() {
   const { data: professions, isLoading } = useQuery({
     queryKey: ["professions"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("professions")
-        .select("*")
-        .order("name");
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("professions")
+          .select("*")
+          .order("name");
+        
+        if (error) throw error;
+        return data;
+      });
     },
   });
 
-  // Get tool counts for each profession
   const { data: toolCounts } = useQuery({
     queryKey: ["profession-tool-counts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ai_tools")
-        .select("profession_tags");
-      
-      if (error) throw error;
-      
-      const counts: Record<string, number> = {};
-      data.forEach(tool => {
-        tool.profession_tags?.forEach((tag: string) => {
-          counts[tag] = (counts[tag] || 0) + 1;
+      return withRetry(async () => {
+        const { data, error } = await supabase
+          .from("ai_tools")
+          .select("profession_tags");
+        
+        if (error) throw error;
+        
+        const counts: Record<string, number> = {};
+        data.forEach(tool => {
+          tool.profession_tags?.forEach((tag: string) => {
+            counts[tag] = (counts[tag] || 0) + 1;
+          });
         });
+        return counts;
       });
-      return counts;
     },
   });
 
@@ -52,15 +57,8 @@ export default function Categories() {
   }, [professions, searchQuery]);
 
   return (
-    <Layout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Browse by Profession</h1>
-          <p className="text-muted-foreground">
-            Select your field to discover relevant AI tools
-          </p>
-        </div>
-
+    <Layout title="Categories">
+      <div className="space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -73,14 +71,8 @@ export default function Categories() {
         </div>
 
         {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(9)].map((_, i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-6 w-32" />
-                </CardHeader>
-              </Card>
-            ))}
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
+            {[...Array(9)].map((_, i) => <CategorySkeleton key={i} />)}
           </div>
         ) : filteredProfessions && filteredProfessions.length > 0 ? (
           <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
@@ -90,15 +82,15 @@ export default function Categories() {
                 to={`/category/${profession.slug}`}
                 onClick={() => trackEvent('view_category', { category: profession.slug })}
               >
-                <Card className="h-full hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
-                  <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <Card className="h-full hover:shadow-md transition-all cursor-pointer active:scale-95">
+                  <CardContent className="p-4 flex flex-col items-center text-center space-y-2">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                       <Grid3x3 className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-base mb-1">
+                      <h3 className="font-semibold text-sm">
                         {profession.name}
-                      </CardTitle>
+                      </h3>
                       <p className="text-xs text-muted-foreground">
                         {toolCounts?.[profession.slug] || 0} tools
                       </p>
@@ -109,13 +101,11 @@ export default function Categories() {
             ))}
           </div>
         ) : (
-          <Card>
-            <CardHeader>
-              <p className="text-center text-muted-foreground">
-                No professions found matching "{searchQuery}"
-              </p>
-            </CardHeader>
-          </Card>
+          <EmptyState
+            icon={Grid3x3}
+            title="No categories found"
+            description={`No professions match "${searchQuery}"`}
+          />
         )}
       </div>
     </Layout>

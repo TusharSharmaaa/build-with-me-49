@@ -1,73 +1,85 @@
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Bell, Shield, Info, FileText } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { usePushNotifications } from "@/hooks/usePushNotifications";
-import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { ExternalLink, Bell, Palette, Wifi, Shield, Info } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Settings() {
-  const { permission, isSupported, requestPermission } = usePushNotifications();
+  const { theme, setTheme } = useTheme();
+  const { isSupported, permission, requestPermission } = usePushNotifications();
+  const [dataSaver, setDataSaver] = useState(false);
   const [personalizedAds, setPersonalizedAds] = useState(true);
+  const [testAds, setTestAds] = useState(true);
 
   useEffect(() => {
-    setPersonalizedAds(localStorage.getItem('ad_personalization_consent') !== 'no');
+    setDataSaver(localStorage.getItem("dataSaver") === "true");
+    setPersonalizedAds(localStorage.getItem("personalizedAds") !== "false");
+    setTestAds(localStorage.getItem("testAds") !== "false");
   }, []);
 
   const handleNotificationToggle = async (enabled: boolean) => {
-    if (enabled) {
+    if (enabled && permission !== 'granted') {
       const granted = await requestPermission();
-      if (granted) {
-        toast.success("Push notifications enabled!");
-      } else {
-        toast.error("Notification permission denied");
+      if (!granted) {
+        toast.error("Failed to enable notifications");
       }
     }
   };
 
-  return (
-    <Layout>
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link to="/profile">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Settings</h1>
-          </div>
-        </div>
+  const handleDataSaverToggle = (enabled: boolean) => {
+    setDataSaver(enabled);
+    localStorage.setItem("dataSaver", String(enabled));
+    toast.success(enabled ? "Data saver enabled" : "Data saver disabled");
+  };
 
+  const handlePersonalizedAdsToggle = (enabled: boolean) => {
+    setPersonalizedAds(enabled);
+    localStorage.setItem("personalizedAds", String(enabled));
+    toast.success(enabled ? "Personalized ads enabled" : "Using generic ads");
+  };
+
+  const handleTestAdsToggle = (enabled: boolean) => {
+    setTestAds(enabled);
+    localStorage.setItem("testAds", String(enabled));
+    toast.success(enabled ? "Using test ads" : "Using production ads");
+  };
+
+  const handleRateApp = () => {
+    window.open("https://play.google.com/store/apps/details?id=app.lovable.6d6ef95b79434044814ce44ec5423c6d", "_blank");
+  };
+
+  return (
+    <Layout title="Settings">
+      <div className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <Bell className="h-5 w-5" />
               Notifications
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="push-notifications">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Get notified about new AI tools in your field
-                </p>
+            {isSupported ? (
+              <div className="flex items-center justify-between">
+                <Label htmlFor="notifications" className="text-sm">
+                  Push notifications
+                </Label>
+                <Switch
+                  id="notifications"
+                  checked={permission === 'granted'}
+                  onCheckedChange={handleNotificationToggle}
+                />
               </div>
-              <Switch
-                id="push-notifications"
-                checked={permission === 'granted'}
-                onCheckedChange={handleNotificationToggle}
-                disabled={!isSupported}
-              />
-            </div>
-            {!isSupported && (
-              <p className="text-xs text-muted-foreground">
-                Push notifications are not supported in your browser
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Push notifications not supported in this browser
               </p>
             )}
           </CardContent>
@@ -75,72 +87,133 @@ export default function Settings() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Privacy
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Palette className="h-5 w-5" />
+              Appearance
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Personalized Ads</Label>
-                <p className="text-sm text-muted-foreground">
-                  Allow ads tailored to your interests (helps keep this app free)
-                </p>
-              </div>
+              <Label htmlFor="dark-mode" className="text-sm">
+                Dark mode
+              </Label>
               <Switch
-                checked={personalizedAds}
-                onCheckedChange={(checked) => {
-                  setPersonalizedAds(checked);
-                  localStorage.setItem('ad_personalization_consent', checked ? 'yes' : 'no');
-                  toast.success(checked ? 'Personalized ads enabled' : 'Personalized ads disabled');
-                }}
+                id="dark-mode"
+                checked={theme === "dark"}
+                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
               />
             </div>
-            <p className="text-xs text-muted-foreground">
-              You can change this anytime. Disabling personalized ads means you'll still see ads, but they won't be based on your activity.
-            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Wifi className="h-5 w-5" />
+              Data & Performance
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="data-saver" className="text-sm">
+                  Data saver mode
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Load lower resolution images
+                </p>
+              </div>
+              <Switch
+                id="data-saver"
+                checked={dataSaver}
+                onCheckedChange={handleDataSaverToggle}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Shield className="h-5 w-5" />
+              Privacy & Ads
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="personalized-ads" className="text-sm">
+                  Personalized ads
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  See ads relevant to you
+                </p>
+              </div>
+              <Switch
+                id="personalized-ads"
+                checked={personalizedAds}
+                onCheckedChange={handlePersonalizedAdsToggle}
+              />
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5 flex-1">
+                <Label htmlFor="test-ads" className="text-sm">
+                  Test ads (Dev only)
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Use AdMob test IDs
+                </p>
+              </div>
+              <Switch
+                id="test-ads"
+                checked={testAds}
+                onCheckedChange={handleTestAdsToggle}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
               <Info className="h-5 w-5" />
               About
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <p className="font-medium">AI Tools List</p>
-              <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+            <div className="space-y-2 text-sm">
+              <p className="font-medium">AI Tools List v1.0.0</p>
+              <p className="text-muted-foreground text-xs">
+                Discover free AI tools by profession with transparent usage limits
+              </p>
             </div>
-            <Separator />
-            <p className="text-sm text-muted-foreground">
-              Discover free AI tools for your profession with transparent pricing and usage limits.
-            </p>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Legal
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link to="/privacy-policy">
-                <Shield className="mr-2 h-4 w-4" />
-                Privacy Policy
-              </Link>
-            </Button>
             <Separator />
-            <div className="text-sm text-muted-foreground space-y-1">
-              <p>© 2025 AI Tools List. All rights reserved.</p>
-              <p>This app uses third-party services including AdMob for advertisements.</p>
+
+            <div className="space-y-2">
+              <Button variant="outline" className="w-full justify-between" asChild>
+                <Link to="/privacy-policy">
+                  Privacy Policy
+                  <ExternalLink className="h-4 w-4" />
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full justify-between"
+                onClick={handleRateApp}
+              >
+                Rate this app
+                <ExternalLink className="h-4 w-4" />
+              </Button>
             </div>
+
+            <p className="text-xs text-center text-muted-foreground pt-4">
+              © 2025 AI Tools List. All rights reserved.
+            </p>
           </CardContent>
         </Card>
       </div>

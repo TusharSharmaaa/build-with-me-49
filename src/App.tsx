@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { initAds, showBanner } from './lib/ads';
+
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -34,6 +38,19 @@ function LoadingFallback() {
 }
 
 function App() {
+
+  useEffect(() => {
+  // Only run on a real device/emulator (not in web preview)
+  if (Capacitor.getPlatform() !== 'web') {
+    (async () => {
+      const info: any = await initAds();
+      if (info?.canRequestAds) {
+        await showBanner(); // shows adaptive banner at bottom
+      }
+    })();
+  }
+}, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

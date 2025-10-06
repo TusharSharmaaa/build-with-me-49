@@ -1,3 +1,5 @@
+import DevAdBar from './components/DevAdBar';
+
 import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { initAds, showBanner } from './lib/ads';
@@ -69,6 +71,7 @@ function App() {
         </Suspense>
         <Toaster />
       </BrowserRouter>
+         <DevAdBar />
     </QueryClientProvider>
   );
 }

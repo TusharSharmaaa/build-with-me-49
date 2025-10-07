@@ -29,7 +29,7 @@
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"ਸਮੇਟੋ"</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"ਜਵਾਬ ਦਿਓ"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"ਵੀਡੀਓ"</string>
-    <string msgid="3229508546291798546" name="call_notification_decline_action">"ਕਾਲ ਕੱਟੋ"</string>
+    <string msgid="3229508546291798546" name="call_notification_decline_action">"ਅਸਵੀਕਾਰ ਕਰੋ"</string>
     <string msgid="2659457946726154263" name="call_notification_hang_up_action">"ਸਮਾਪਤ ਕਰੋ"</string>
     <string msgid="6107532579223922871" name="call_notification_incoming_text">"ਇਨਕਮਿੰਗ ਕਾਲ"</string>
     <string msgid="8623827134497363134" name="call_notification_ongoing_text">"ਜਾਰੀ ਕਾਲ"</string>
@@ -62,10 +62,10 @@
     <string name="notifications_permission_confirm">ਆਗਿਆ ਦਿਓ</string>
     <string name="notifications_permission_decline">ਆਗਿਆ ਨਾ ਦਿਓ</string>
     <string name="notifications_permission_title">ਕੀ ਐਪ ਨੂੰ ਤੁਹਾਨੂੰ ਸੂਚਨਾਵਾਂ ਭੇਜਣ ਦੀ ਆਗਿਆ ਦੇਣੀ ਹੈ?</string>
-    <string name="offline_dialog_image_description">ਪ੍ਰਤੀਕ</string>
-    <string name="offline_dialog_text">ਤੁਹਾਡੇ ਵਾਪਸ ਆਨਲਾਈਨ ਹੋਣ \'ਤੇ ਤੁਹਾਨੂੰ ਇੱਕ ਸੂਚਨਾ ਪ੍ਰਾਪਤ ਹੋਵੇਗੀ ਜਿਸ ਵਿੱਚ ਲਿੰਕ ਹੋਵੇਗਾ</string>
+    <string name="offline_notification_text">ਵਿਗਿਆਪਨ ਖੋਲ੍ਹਣ ਲਈ ਟੈਪ ਕਰੋ</string>
     <string name="offline_notification_title">ਤੁਹਾਡੇ ਵੱਲੋਂ ਆਫ਼ਲਾਈਨ ਹੋਣ ਦੌਰਾਨ ਰੱਖਿਅਤ ਕੀਤੇ ਵਿਗਿਆਪਨ ਦੇਖੋ</string>
     <string name="offline_opt_in_confirm">ਠੀਕ ਹੈ</string>
+    <string name="offline_opt_in_confirmation">ਤੁਹਾਡੇ ਵਾਪਸ ਆਨਲਾਈਨ ਹੋਣ \'ਤੇ ਤੁਹਾਨੂੰ ਇੱਕ ਸੂਚਨਾ ਪ੍ਰਾਪਤ ਹੋਵੇਗੀ ਜਿਸ ਵਿੱਚ ਲਿੰਕ ਹੋਵੇਗਾ</string>
     <string name="offline_opt_in_decline">ਨਹੀਂ ਧੰਨਵਾਦ</string>
     <string name="offline_opt_in_message">ਅਸੀਂ ਤੁਹਾਨੂੰ ਇੱਕ ਸੂਚਨਾ ਭੇਜਾਂਗੇ ਜਿਸ ਵਿੱਚ ਵਿਗਿਆਪਨਦਾਤਾ ਦੀ ਸਾਈਟ ਦਾ ਲਿੰਕ ਹੋਵੇਗਾ।</string>
     <string name="offline_opt_in_title">ਤੁਹਾਡੇ ਵਾਪਸ ਆਨਲਾਈਨ ਹੋਣ \'ਤੇ ਵਿਗਿਆਪਨ ਖੋਲ੍ਹੋ।</string>
@@ -74,7 +74,7 @@
     <string name="s3">ਸਵੀਕਾਰ ਕਰੋ</string>
     <string name="s4">ਅਸਵੀਕਾਰ ਕਰੋ</string>
     <string name="s5">ਕੈਲੰਡਰ ਇਵੈਂਟ ਬਣਾਓ</string>
-    <string name="s6">ਕੀ ਇਸ਼ਤਿਹਾਰ ਨੂੰ ਇੱਕ ਕੈਲੰਡਰ ਇਵੈਂਟ ਬਣਾਉਣ ਦੀ ਆਗਿਆ ਦੇਣੀ ਹੈ?</string>
+    <string name="s6">ਕੀ ਇਸ਼ਤਿਹਾਰ ਨੂੰ ਇੱਕ ਕੈਲੰਡਰ ਵਰਤਾਰਾ ਬਣਾਉਣ ਦੀ ਆਗਿਆ ਦੇਣੀ ਹੈ?</string>
     <string name="s7">ਟੈਸਟ ਇਸ਼ਤਿਹਾਰ</string>
     <string msgid="6264217191555673260" name="search_menu_title">"ਖੋਜ"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>

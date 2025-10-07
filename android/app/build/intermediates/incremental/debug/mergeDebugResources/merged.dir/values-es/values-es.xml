@@ -62,10 +62,10 @@
     <string name="notifications_permission_confirm">Permitir</string>
     <string name="notifications_permission_decline">No permitir</string>
     <string name="notifications_permission_title">¿Permitir que la aplicación te envíe notificaciones?</string>
-    <string name="offline_dialog_image_description">Icono</string>
-    <string name="offline_dialog_text">Recibirás una notificación que incluirá el enlace cuando recuperes la conexión</string>
+    <string name="offline_notification_text">Toca para abrir el anuncio</string>
     <string name="offline_notification_title">Mira el anuncio guardado cuando no tenías conexión</string>
     <string name="offline_opt_in_confirm">Aceptar</string>
+    <string name="offline_opt_in_confirmation">Recibirás una notificación que incluirá el enlace cuando recuperes la conexión</string>
     <string name="offline_opt_in_decline">No, gracias</string>
     <string name="offline_opt_in_message">Te enviaremos una notificación que incluirá un enlace al sitio web del anunciante.</string>
     <string name="offline_opt_in_title">Se abrirá el anuncio cuando recuperes la conexión.</string>

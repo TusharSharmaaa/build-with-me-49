@@ -273,8 +273,6 @@
     <item name="home" type="id"/>
     <item name="line1" type="id"/>
     <item name="line3" type="id"/>
-    <item name="offline_dialog_advertiser_name" type="id"/>
-    <item name="offline_dialog_image" type="id"/>
     <item name="progress_circular" type="id"/>
     <item name="progress_horizontal" type="id"/>
     <item name="report_drawn" type="id"/>
@@ -364,7 +362,7 @@
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
     <string name="copy_toast_msg">Link copied to clipboard</string>
-    <string name="custom_url_scheme">com.tusharsharmaaa.aitoolslist</string>
+    <string name="custom_url_scheme">app.lovable.6d6ef95b79434044814ce44ec5423c6d</string>
     <string name="fallback_menu_item_copy_link">Copy link</string>
     <string name="fallback_menu_item_open_in_browser">Open in browser</string>
     <string name="fallback_menu_item_share_link">Share link</string>
@@ -377,28 +375,27 @@
     <string description="This string appears within a window that describes an ad&apos;s contents. It indicates that the following image / video would be the media view field (graphical content) of the native ad. [CHAR_LIMIT=NONE]" name="native_media_view">
     Media View
   </string>
-    <string name="no_webview_text">This app requires a WebView to work</string>
     <string description="Label on the button to go to settings. [CHAR_LIMIT=20]" name="notifications_permission_confirm">
       Allow</string>
     <string description="Label on the button to decline going to settings. [CHAR_LIMIT=20]" name="notifications_permission_decline">
       Don\'t allow</string>
     <string description="Body of the dialog presented when an ad wants to grant notifications permission. [CHAR_LIMIT=NONE]" name="notifications_permission_title">
       Allow app to send you notifications?</string>
-    <string description="Describes content of the offline dialog image view. This property is used primarily for accessibility. [CHAR_LIMIT=NONE]" name="offline_dialog_image_description">
-      Icon</string>
-    <string description="Confirmation text displayed when the user opts in to get a notification. [CHAR_LIMIT=NONE]" name="offline_dialog_text">
-      You\'ll get a notification with the link when you\'re back online</string>
+    <string description="Text of the notification which directs the user to the landing page of the ad. [CHAR_LIMIT=NONE]" name="offline_notification_text">
+      Tap to open ad</string>
     <string description="Title of the notification which directs the user to the landing page of the ad. [CHAR_LIMIT=NONE]" name="offline_notification_title">
       View the ad you saved when you were offline</string>
     <string description="Label on the button to opt in to a notification later when the user is back online. [CHAR_LIMIT=12]" name="offline_opt_in_confirm">
       OK</string>
+    <string description="Confirmation text displayed when the user opts in to get a notification. [CHAR_LIMIT=NONE]" name="offline_opt_in_confirmation">
+      You\'ll get a notification with the link when you\'re back online</string>
     <string description="Label on the button to decline to get a notification later when the user is back online. [CHAR_LIMIT=12]" name="offline_opt_in_decline">
       No thanks</string>
     <string description="Body of the dialog presented when an ad is clicked while offline. [CHAR_LIMIT=NONE]" name="offline_opt_in_message">
       We\'ll send you a notification with a link to the advertiser site.</string>
     <string description="Title of the dialog presented when an ad is clicked while offline. [CHAR_LIMIT=NONE]" name="offline_opt_in_title">
       Open ad when you\'re back online.</string>
-    <string name="package_name">com.tusharsharmaaa.aitoolslist</string>
+    <string name="package_name">app.lovable.6d6ef95b79434044814ce44ec5423c6d</string>
     <string name="s1">Save image</string>
     <string name="s2">"Allow Ad to store image in Picture gallery?"</string>
     <string name="s3">Accept</string>
@@ -2825,8 +2822,6 @@
         
         <attr format="string" name="fontProviderQuery"/>
         
-        <attr format="string" name="fontProviderFallbackQuery"/>
-        
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
@@ -2837,7 +2832,7 @@
               default typeface will be used instead. -->
             <enum name="blocking" value="0"/>
             <!-- The async font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, trigger a
+              First, check the local cache, then if the requeted font is not cached, trigger a
               request the font and continue with layout inflation. Once the font fetch succeeds, the
               target text view will be refreshed with the downloaded font data. The
               fontProviderFetchTimeout will be ignored if async loading is specified. -->
@@ -3423,4 +3418,7 @@
         <attr name="android:inflatedId"/>
         <attr name="android:id"/>
     </declare-styleable>
+    <declare-styleable name="bridge_fragment">
+    <attr format="string" name="start_dir"/>
+  </declare-styleable>
 </resources>

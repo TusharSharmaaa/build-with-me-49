@@ -58,14 +58,14 @@
     <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"አገናኝ አጋራ"</string>
     <string name="native_body">አካል</string>
     <string name="native_headline">ዋና ርዕስ</string>
-    <string name="native_media_view">የሚዲያ ዕይታ</string>
+    <string name="native_media_view">የሚዲያ እይታ</string>
     <string name="notifications_permission_confirm">ፍቀድ</string>
     <string name="notifications_permission_decline">አትፍቀድ</string>
     <string name="notifications_permission_title">መተግበሪያ ማሳወቂያዎችን እንዲልክልዎ ይፈቀድ?</string>
-    <string name="offline_dialog_image_description">አዶ</string>
-    <string name="offline_dialog_text">ወደ መስመር ላይ ሲመለሱ ከአገናኙ ጋር አንድ ማሳወቂያ ይደርስዎታል</string>
+    <string name="offline_notification_text">ማስታወቂያን ለመክፈት መታ ያድርጉ</string>
     <string name="offline_notification_title">ከመስመር ውጭ ሲሆኑ ያስቀመጡትን ማስታወቂያ ይመልከቱ</string>
     <string name="offline_opt_in_confirm">እሺ</string>
+    <string name="offline_opt_in_confirmation">ወደ መስመር ላይ ሲመለሱ ከአገናኙ ጋር አንድ ማሳወቂያ ይደርስዎታል</string>
     <string name="offline_opt_in_decline">አይ አመሰግናለሁ</string>
     <string name="offline_opt_in_message">ወደ ማስታወቂያ አስነጋሪ ጣቢያው ከሚወስድ አገናኝ ጋር አንድ ማሳወቂያ እንልክልዎታለን።</string>
     <string name="offline_opt_in_title">መስመር ላይ ሲመለሱ ማስታወቂያ ይክፈቱ።</string>

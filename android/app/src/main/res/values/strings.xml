@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AI Tools List</string>
+    <string name="title_activity_main">AI Tools List</string>
+    <string name="package_name">app.lovable.6d6ef95b79434044814ce44ec5423c6d</string>
+    <string name="custom_url_scheme">app.lovable.6d6ef95b79434044814ce44ec5423c6d</string>
+</resources>

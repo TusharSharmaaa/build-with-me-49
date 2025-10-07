@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.tusharsharmaaa.aitoolslist.app-mergeDebugResources-34:/values-v27/values-v27.xml",
+            "outputFile": "com.tusharsharmaaa.aitoolslist.app-mergeDebugResources-33:/values-v27/values-v27.xml",
             "map": [
                 {
-                    "source": "/Users/tusharsharma/.gradle/caches/8.11.1/transforms/ef234481c09f01fb9f0508a5da2b1126/transformed/core-splashscreen-1.0.1/res/values-v27/values-v27.xml",
+                    "source": "/Users/tusharsharma/.gradle/caches/transforms-4/1c39dcc9fe2b2254eab8291f735cabb0/transformed/core-splashscreen-1.0.1/res/values-v27/values-v27.xml",
                     "from": {
                         "startLines": "2,3,4,7",
                         "startColumns": "4,4,4,4",

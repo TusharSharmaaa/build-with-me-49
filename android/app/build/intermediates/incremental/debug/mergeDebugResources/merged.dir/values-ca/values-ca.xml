@@ -62,10 +62,10 @@
     <string name="notifications_permission_confirm">Permet</string>
     <string name="notifications_permission_decline">No permetis</string>
     <string name="notifications_permission_title">Vols permetre que l\'aplicació t\'enviï notificacions?</string>
-    <string name="offline_dialog_image_description">Icona</string>
-    <string name="offline_dialog_text">Rebràs una notificació amb l\'enllaç quan tornis a tenir connexió</string>
+    <string name="offline_notification_text">Toca per obrir l\'anunci</string>
     <string name="offline_notification_title">Mira l\'anunci que has desat sense connexió</string>
     <string name="offline_opt_in_confirm">D\'acord</string>
+    <string name="offline_opt_in_confirmation">Rebràs una notificació amb l\'enllaç quan tornis a tenir connexió</string>
     <string name="offline_opt_in_decline">No, gràcies</string>
     <string name="offline_opt_in_message">T\'enviarem una notificació amb un enllaç al lloc web de l\'anunciant.</string>
     <string name="offline_opt_in_title">Obre l\'anunci quan tornis a tenir connexió.</string>

@@ -170,7 +170,6 @@ attr font
 attr fontFamily
 attr fontProviderAuthority
 attr fontProviderCerts
-attr fontProviderFallbackQuery
 attr fontProviderFetchStrategy
 attr fontProviderFetchTimeout
 attr fontProviderPackage
@@ -274,6 +273,7 @@ attr spinnerStyle
 attr splashScreenIconSize
 attr splitTrack
 attr srcCompat
+attr start_dir
 attr state_above_anchor
 attr statusBarBackground
 attr subMenuArrow
@@ -668,7 +668,6 @@ drawable abc_textfield_search_material
 drawable abc_vector_test
 drawable admob_close_button_black_circle_white_cross
 drawable admob_close_button_white_circle_black_cross
-drawable admob_close_button_white_cross
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -722,8 +721,6 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
-drawable offline_dialog_background
-drawable offline_dialog_default_icon_42dp
 drawable splash
 drawable test_level_drawable
 drawable tooltip_frame_dark
@@ -859,9 +856,6 @@ id notification_background
 id notification_main_column
 id notification_main_column_container
 id off
-id offline_dialog_advertiser_name
-id offline_dialog_image
-id offline_dialog_text
 id on
 id parentPanel
 id progress_circular
@@ -919,7 +913,6 @@ id text
 id text2
 id textSpacerNoButtons
 id textSpacerNoTitle
-id textView
 id time
 id title
 id titleDividerNoCustom
@@ -986,18 +979,16 @@ layout admob_empty_layout
 layout bridge_layout_main
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
-layout capacitor_bridge_layout_main
 layout custom_dialog
+layout fragment_bridge
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
-layout no_webview
 layout notification_action
 layout notification_action_tombstone
 layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
 layout notification_template_part_time
-layout offline_ads_dialog
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
@@ -1068,14 +1059,13 @@ string fallback_menu_item_share_link
 string native_body
 string native_headline
 string native_media_view
-string no_webview_text
 string notifications_permission_confirm
 string notifications_permission_decline
 string notifications_permission_title
-string offline_dialog_image_description
-string offline_dialog_text
+string offline_notification_text
 string offline_notification_title
 string offline_opt_in_confirm
+string offline_opt_in_confirmation
 string offline_opt_in_decline
 string offline_opt_in_message
 string offline_opt_in_title
@@ -1481,7 +1471,7 @@ styleable CompoundButton android_button buttonCompat buttonTint buttonTintMode
 styleable CoordinatorLayout keylines statusBarBackground
 styleable CoordinatorLayout_Layout android_layout_gravity layout_anchor layout_anchorGravity layout_behavior layout_dodgeInsetEdges layout_insetEdge layout_keyline
 styleable DrawerArrowToggle arrowHeadLength arrowShaftLength barLength color drawableSize gapBetweenBars spinBars thickness
-styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFallbackQuery fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery fontProviderSystemFontFamily
+styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery fontProviderSystemFontFamily
 styleable FontFamilyFont android_font android_fontWeight android_fontStyle android_ttcIndex android_fontVariationSettings font fontStyle fontVariationSettings fontWeight ttcIndex
 styleable Fragment android_name android_id android_tag
 styleable FragmentContainerView android_name android_tag
@@ -1508,6 +1498,7 @@ styleable Toolbar android_gravity android_minHeight buttonGravity collapseConten
 styleable View android_theme android_focusable paddingEnd paddingStart theme
 styleable ViewBackgroundHelper android_background backgroundTint backgroundTintMode
 styleable ViewStubCompat android_id android_layout android_inflatedId
+styleable bridge_fragment start_dir
 xml config
 xml file_paths
 xml gma_ad_services_config

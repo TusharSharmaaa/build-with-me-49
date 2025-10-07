@@ -1,0 +1,86 @@
+// android/app/build.gradle  (module-level)
+
+plugins {
+  id 'com.android.application'
+}
+
+android {
+  // Use a valid Java/Kotlin package name here (letters, digits, underscores; segments start with a letter)
+  // Pick the one you used before for your app id:
+  namespace "com.tusharsharmaaa.aitoolslist"
+
+  // Set SDKs explicitly (don’t rely on rootProject.ext)
+  compileSdk 34
+
+  defaultConfig {
+    // This is the Play Store / package name (can be same as namespace, but doesn’t have to be)
+    applicationId "com.tusharsharmaaa.aitoolslist"
+    minSdk 24
+    targetSdk 34
+
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    // Keep this so modern web assets aren’t stripped
+    aaptOptions {
+      ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  // AGP 8.x requires Java 17
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  packagingOptions {
+    resources {
+      excludes += ['META-INF/LICENSE*', 'META-INF/NOTICE*', 'META-INF/DEPENDENCIES']
+    }
+  }
+}
+
+repositories {
+  // Keep capacitor cordova plugin libs + local libs
+  flatDir {
+    dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+  }
+}
+
+dependencies {
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+  // If your project has variables.gradle you can switch back to those vars later.
+  implementation "androidx.appcompat:appcompat:1.7.0"
+  implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
+  implementation "androidx.core:core-splashscreen:1.0.1"
+
+  implementation project(':capacitor-android')
+  implementation project(':capacitor-cordova-android-plugins')
+
+  testImplementation "junit:junit:4.13.2"
+  androidTestImplementation "androidx.test.ext:junit:1.2.1"
+  androidTestImplementation "androidx.test.espresso:espresso-core:3.6.1"
+}
+
+// Keep Capacitor’s merge step
+apply from: 'capacitor.build.gradle'
+
+// Apply Google Services only if the JSON exists (safe)
+try {
+  def servicesJSON = file('google-services.json')
+  if (servicesJSON.text) {
+    apply plugin: 'com.google.gms.google-services'
+  }
+} catch(Exception e) {
+  logger.info("google-services.json not found, google-services plugin not applied.")
+}

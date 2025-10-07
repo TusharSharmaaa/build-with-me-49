@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="23"
-        android:targetSdkVersion="35" />
+        android:minSdkVersion="24"
+        android:targetSdkVersion="34" />
 
     <!-- Permissions -->
 
@@ -60,7 +60,7 @@
 
         <activity
             android:name="com.tusharsharmaaa.aitoolslist.MainActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
             android:exported="true"
             android:label="@string/title_activity_main"
             android:launchMode="singleTask"
@@ -81,7 +81,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -104,13 +103,6 @@
             android:name="com.google.android.gms.ads.OutOfContextTestingActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:exported="false" />
-        <activity
-            android:name="com.google.android.gms.ads.NotificationHandlerActivity"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <property
             android:name="android.adservices.AD_SERVICES_CONFIG"
@@ -124,6 +116,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <uses-library
+            android:name="android.ext.adservices"
+            android:required="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -142,10 +138,6 @@
                 android:name="androidx.profileinstaller.ProfileInstallerInitializer"
                 android:value="androidx.startup" />
         </provider>
-
-        <uses-library
-            android:name="android.ext.adservices"
-            android:required="false" />
 
         <service
             android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"

@@ -274,3 +274,39 @@ All colors MUST be HSL.
     scrollbar-width: none;
   }
 }
+
+/* Safe areas for notches/camera cutouts */
+html, body, #root { height: 100%; }
+body {
+  /* Top padding for status bar / cutouts */
+  padding-top: env(safe-area-inset-top);
+  /* Bottom padding reserved for ads (updated dynamically) */
+  padding-bottom: var(--ad-safe, 0px);
+}
+
+/* Dev toolbar should float above the ad safe space */
+.dev-adbar {
+  bottom: var(--ad-safe, 0px) !important;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  /* Respect safe areas for top notch and bottom gesture nav */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--ad-safe, 0px));
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+header {
+  padding: 16px;
+  background: white;
+}

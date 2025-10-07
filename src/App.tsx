@@ -1,8 +1,15 @@
-import DevAdBar from './components/DevAdBar';
+import useHardwareBack from './hooks/useHardwareBack';
+
+import ToolDetail from './pages/ToolDetail';
+import SubmitTool from './pages/SubmitTool';
+
+import ScrollToTop from './components/ScrollToTop';
+
+import { bootSessionClock } from './hooks/useInterstitialPolicy';
 
 import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
-import { initAds, showBanner } from './lib/ads';
+import { initAds, showBanner, attachBannerListener } from './lib/ads';
 
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -40,14 +47,18 @@ function LoadingFallback() {
 }
 
 function App() {
+    useHardwareBack();  // 👈 HERE — top of function body
 
   useEffect(() => {
-  // Only run on a real device/emulator (not in web preview)
+    bootSessionClock();
+
   if (Capacitor.getPlatform() !== 'web') {
+    attachBannerListener();
     (async () => {
-      const info: any = await initAds();
-      if (info?.canRequestAds) {
-        await showBanner(); // shows adaptive banner at bottom
+      try {
+        const info: any = await initAds();
+      } catch (e) {
+        console.error('Ad init error', e);
       }
     })();
   }
@@ -64,14 +75,18 @@ function App() {
             <Route path="/tool/:id" element={<ToolDetailPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/tool/:id" element={<ToolDetail />} />
+<Route path="/submit" element={<SubmitTool />} />
+
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/submit" element={<SubmitPage />} />
             <Route path="/about" element={<AboutPage />} />
+<ScrollToTop />
+
           </Routes>
         </Suspense>
         <Toaster />
       </BrowserRouter>
-         <DevAdBar />
     </QueryClientProvider>
   );
 }

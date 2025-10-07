@@ -24,7 +24,8 @@ export async function initAds() {
   // Ask/refresh consent each launch; show form if needed
   try {
     let info = await AdMob.requestConsentInfo();
-    if (!info.canRequestAds) {
+    // Use the correct property from AdmobConsentInfo, e.g., isConsentFormAvailable
+    if (info.isConsentFormAvailable) {
       info = await AdMob.showConsentForm();
     }
     return info;
@@ -61,6 +62,34 @@ export async function showRewarded() {
 }
 
 // Let users revisit privacy options (settings screen hook)
+// The showPrivacyOptionsForm method does not exist in the AdMob plugin.
+// You may implement your own privacy options logic here or leave this function as a placeholder.
 export async function showPrivacyOptions() {
-  await AdMob.showPrivacyOptionsForm();
+  // TODO: Implement privacy options form if supported by the plugin or handle accordingly.
+}
+import { Capacitor } from '@capacitor/core';
+
+export function attachBannerListener() {
+  if (Capacitor.getPlatform() === 'web') return;
+
+  const setAdSafe = (px: number) => {
+    document.documentElement.style.setProperty('--ad-safe', `${px}px`);
+  };
+
+  window.addEventListener(BannerAdPluginEvents.Loaded, () => {
+    setAdSafe(60); // default adaptive height; will be corrected by SizeChanged
+  });
+
+  window.addEventListener(BannerAdPluginEvents.SizeChanged, (e: any) => {
+    const h = e?.size?.height || 60;
+    setAdSafe(h);
+  });
+
+  window.addEventListener(BannerAdPluginEvents.FailedToLoad, () => {
+    setAdSafe(0);
+  });
+
+  window.addEventListener(BannerAdPluginEvents.Closed, () => {
+    setAdSafe(0);
+  });
 }

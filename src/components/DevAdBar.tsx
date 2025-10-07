@@ -35,6 +35,7 @@ export default function DevAdBar() {
       <button style={btn} onClick={showInterstitial}>Interstitial</button>
       <button style={btn} onClick={showRewarded}>Rewarded</button>
       <button style={btn} onClick={showPrivacyOptions}>Privacy (UMP)</button>
+       <div className="dev-adbar" style={barStyle}></div>
       <button
         style={btn}
         onClick={() => window.open('/privacy.html', '_blank')}

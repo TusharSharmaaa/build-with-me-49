@@ -1,26 +1,24 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { ThemeProvider } from "next-themes";
-import App from "./App.tsx";
-import "./index.css";
-import { ErrorBoundary } from "./components/system/ErrorBoundary";
+// src/main.tsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'
 
-// Register service worker for PWA
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      // Silent fail in development
-    });
-  });
+// Log any uncaught errors to the console (so we can see the real cause if it happens)
+window.addEventListener('error', (e) => {
+  console.error('[GlobalError]', e.error || e.message || e)
+})
+window.addEventListener('unhandledrejection', (e) => {
+  console.error('[UnhandledPromiseRejection]', e.reason || e)
+})
+
+const rootEl = document.getElementById('root')
+if (!rootEl) {
+  throw new Error('Root element #root not found in index.html')
 }
 
-createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <App />
-      </ThemeProvider>
-    </ErrorBoundary>
+    <App />
   </React.StrictMode>
-);
-
+)

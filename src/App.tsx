@@ -1,59 +1,121 @@
-import { lazy, Suspense } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
+// src/App.tsx
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
-// Eager load critical pages
-import { HomePage } from "./pages/simple/HomePage";
-
-// Lazy load secondary pages
-const CategoriesPage = lazy(() => import("./pages/simple/CategoriesPage").then(m => ({ default: m.CategoriesPage })));
-const CategoryToolsPage = lazy(() => import("./pages/simple/CategoryToolsPage").then(m => ({ default: m.CategoryToolsPage })));
-const ToolDetailPage = lazy(() => import("./pages/simple/ToolDetailPage").then(m => ({ default: m.ToolDetailPage })));
-const SearchPage = lazy(() => import("./pages/simple/SearchPage").then(m => ({ default: m.SearchPage })));
-const FavoritesPage = lazy(() => import("./pages/simple/FavoritesPage").then(m => ({ default: m.FavoritesPage })));
-const ProfilePage = lazy(() => import("./pages/simple/ProfilePage").then(m => ({ default: m.ProfilePage })));
-const SubmitPage = lazy(() => import("./pages/simple/SubmitPage").then(m => ({ default: m.SubmitPage })));
-const AboutPage = lazy(() => import("./pages/simple/AboutPage").then(m => ({ default: m.AboutPage })));
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      retry: 1,
-    },
-  },
-});
-
-function LoadingFallback() {
+function TopBar() {
+  const nav = useNavigate();
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+    <header style={{
+      display: 'flex', alignItems: 'center', gap: 12,
+      padding: '12px 16px', borderBottom: '1px solid #eee',
+      position: 'sticky', top: 0, background: '#fff', zIndex: 10
+    }}>
+      <h1 style={{ margin: 0, fontSize: 20 }}>AI Tools List</h1>
+      <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+        <button onClick={() => nav('/')} aria-label="Home">Home</button>
+        <button onClick={() => nav('/categories')} aria-label="Categories">Categories</button>
+        <button onClick={() => nav('/search')} aria-label="Search">Search</button>
+        <button onClick={() => nav('/favorites')} aria-label="Favorites">Favorites</button>
+        <button onClick={() => nav('/profile')} aria-label="Profile">Profile</button>
+      </div>
+    </header>
+  );
+}
+
+function PageShell({ title, children }: { title: string; children?: React.ReactNode }) {
+  return (
+    <div style={{ padding: 16 }}>
+      <h2 style={{ marginTop: 0 }}>{title}</h2>
+      {children}
     </div>
   );
 }
 
-function App() {
+function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/category/:slug" element={<CategoryToolsPage />} />
-            <Route path="/tool/:id" element={<ToolDetailPage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/submit" element={<SubmitPage />} />
-            <Route path="/about" element={<AboutPage />} />
-          </Routes>
-        </Suspense>
-        <Toaster />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <PageShell title="Home">
+      <p>Welcome! Basic shell is running without ads.</p>
+      <ul>
+        <li><Link to="/tool/1">Open a sample Tool Detail (id: 1)</Link></li>
+        <li><Link to="/submit">Submit a Tool</Link></li>
+      </ul>
+    </PageShell>
   );
 }
 
-export default App;
+function Categories() {
+  return <PageShell title="Categories">Categories list goes here.</PageShell>;
+}
+
+function Search() {
+  return <PageShell title="Search">Search UI goes here.</PageShell>;
+}
+
+function Favorites() {
+  return <PageShell title="Favorites">Your saved tools appear here.</PageShell>;
+}
+
+function Profile() {
+  return <PageShell title="Profile">Profile/settings page.</PageShell>;
+}
+
+function ToolDetail() {
+  return (
+    <PageShell title="Tool Detail">
+      <p>Details for a specific tool. Route: <code>/tool/:id</code></p>
+    </PageShell>
+  );
+}
+
+function SubmitTool() {
+  return (
+    <PageShell title="Submit AI Tool">
+      <form onSubmit={(e) => { e.preventDefault(); alert('Submitted (demo)'); }}>
+        <div style={{ display: 'grid', gap: 10, maxWidth: 420 }}>
+          <label>
+            Tool Name *
+            <input required placeholder="e.g., Canva AI" style={{ width: '100%' }} />
+          </label>
+          <label>
+            Website URL *
+            <input required type="url" placeholder="https://example.com" style={{ width: '100%' }} />
+          </label>
+          <label>
+            Description
+            <textarea rows={4} placeholder="What does it do?" style={{ width: '100%' }} />
+          </label>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </PageShell>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <TopBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/tool/:id" element={<ToolDetail />} />
+        <Route path="/submit" element={<SubmitTool />} />
+        {/* fallback */}
+        <Route path="*" element={
+          <PageShell title="Not Found">
+            <p>This page does not exist. Go <Link to="/">home</Link>.</p>
+          </PageShell>
+        }/>
+      </Routes>
+      <footer style={{
+        position: 'sticky', bottom: 0, padding: 12, borderTop: '1px solid #eee',
+        background: '#fff', textAlign: 'center'
+      }}>
+        <small>© {new Date().getFullYear()} AI Tools List</small>
+      </footer>
+    </BrowserRouter>
+  );
+}
